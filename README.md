@@ -4,7 +4,7 @@ Hate remembering things? Forgetting everything got you down? Well Brain is for y
 Brain will remember everything for you!\
 All you need to add the information to Brain and you can recall it at any time.\
 Brain is based off of the [Zettlekasten](https://zettelkasten.de) method of note taking by creating backlinks between notes.\
-Brain is different because of the large amount of customisation it allows for by having the notes stored in html format.\
+Brain is different because of the large amount of customisation it allows for by having the notes stored in html format.
 
 ## Planned features
 - Notes can be written/edited in html
