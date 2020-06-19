@@ -8,7 +8,7 @@ Install requirements
 ```bash
 pip install -r requirements.txt
 ```
-run `app.py`
+Run `app.py`
 ```bash
 python app.py
 ```
@@ -19,7 +19,7 @@ python app.py
 #### Description:
 Returns a list of all the notes.\
 This contains data for the time the note was created, the time it was last modified and the name of the note.
-#### Sample response
+#### Sample response:
 Request: `.get("http://localhost:5000/api/notes")`
 ```json
 [
@@ -50,7 +50,7 @@ This contains:
 - Time created
 - Time modified
 - Note contents
-#### Sample response
+#### Sample response:
 Request: `.get("http://localhost:5000/api/note/Note 3")`
 ```json
 {
@@ -60,6 +60,9 @@ Request: `.get("http://localhost:5000/api/note/Note 3")`
   "name": "Note 3"
 }
 ```
+
+---
+#### URL: `/api/note`
 #### Method: `POST`
 #### Description:
 Saves the passed note data.\
@@ -68,7 +71,7 @@ The `note` property contains the new note object you want to save. This can incl
 `created` and `modified` as these will just be ignored so feel free to just use a modified note object.\
 You will also use this endpoint for creating notes, simply pass a value of `null` into the `target` property and the
 note will be created using the note object provided in the `note` property.
-### Payload:
+#### Payload:
 ```json
 {
     "target": "Note name",
@@ -78,7 +81,7 @@ note will be created using the note object provided in the `note` property.
     }
 }
 ```
-#### Sample response
+#### Sample response:
 This returns an updated list of notes.
 ```json
 [
@@ -99,4 +102,3 @@ This returns an updated list of notes.
   }
 ]
 ```
----
