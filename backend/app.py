@@ -1,5 +1,7 @@
 import json
 import os
+from pprint import pprint
+
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from models.Notes import Notes
@@ -35,16 +37,26 @@ def settings():
         return jsonify({})
 
 
-@app.route('/api/note/<note_id>', methods = ['GET', 'POST'])
-def note_data(note_id: str):
+@app.route('/api/note/<note_name>')
+def note_data(note_name: str):
     """ Get the content and information about a specific note.
 
-    :param note_id: The id of the note you want to get
+    :param note_name: The id of the note you want to get
     :return: Information and content of the requested note
     """
-    if request.method == 'GET':
-        note = _notes.get_note(note_id)
-        return jsonify(note.to_json(include_contents = True) if note is not None else note)
+    note = _notes.get_note(note_name)
+    return jsonify(note.to_json(include_contents = True) if note is not None else note)
+
+
+@app.route('/api/note', methods = ['POST'])
+def save_note_data():
+    if (note_content := request.json) is None:
+        return "No note content provided", 400
+    elif note_content.get('note') is None:
+        return "No note object provided", 400
+
+    _notes.save_note(note_content.get('target'), note_content.get('note'))
+    return jsonify(_notes.get_notes_json())
 
 
 if __name__ == '__main__':
