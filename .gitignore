@@ -5,6 +5,7 @@
 # Recommended template: Node.gitignore
 
 backend/.idea
+.idea
 
 # TODO: where does this rule come from?
 docs/_book
