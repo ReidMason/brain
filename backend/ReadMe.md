@@ -1,4 +1,4 @@
-#Documentation
+# Documentation
 The api is accessible through the `http://localhost:5000/api/` route.\
 When using post routes don't forget to specify the `content-type` as `application/json` in the request headers.
 
