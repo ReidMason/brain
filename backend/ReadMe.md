@@ -17,94 +17,41 @@ python app.py
 #### URL: `/api/notes`
 #### Method: `GET`
 #### Description:
-Returns a list of all the notes.\
-This contains data for the time the note was created, the time it was last modified and the name of the note.
+Returns a list of all note data.
 #### Sample response:
 Request: `.get("http://localhost:5000/api/notes")`
 ```json
-[
-  {
-    "contents": "<h4>This is Note 2</h4>",
-    "created": "2020-06-18T21:33:55Z",
-    "modified": "2020-06-19T19:26:34Z",
-    "name": "Note 2"
-  },
-  {
-    "contents": "<h1>This is a new note test</h1>",
-    "created": "2020-06-19T22:48:05Z",
-    "modified": "2020-06-20T01:07:53Z",
-    "name": "Note 3"
-  },
-  {
-    "contents": "<h1>From test document 1</h1>",
-    "created": "2020-06-18T21:46:19Z",
-    "modified": "2020-06-20T01:07:53Z",
-    "name": "Renamed1"
-  }
-]
-```
----
-#### URL: `/api/note/<note name>`
-#### Method: `GET`
-#### Description:
-Returns details and contents of the specified note.\
-This contains:
-- Note name
-- Time created
-- Time modified
-- Note contents
-#### Sample response:
-Request: `.get("http://localhost:5000/api/note/Note 3")`
-```json
 {
-  "contents": "<h1>This is a new note</h1>",
-  "created": "2020-06-19T22:48:05Z",
-  "modified": "2020-06-19T22:48:05Z",
-  "name": "Note 3"
+  "id": "root",
+  "name": "root",
+  "folders": [
+    {
+      "id": "root",
+      "name": "root",
+      "folders": [],
+      "notes": [
+        {
+          "id": "21131255",
+          "name": "New Note",
+          "content": "<h1>Note content</h1>",
+          "tags": ["#tag"],
+          "links": []
+        }
+      ]
+    }
+  ],
+  "notes": [
+    {
+      "id": "12353566",
+      "name": "New Note",
+      "content": "<h1>Note content</h1>",
+      "tags": ["#tag"],
+      "links": ["21131255"]
+    }
+  ]
 }
 ```
-
----
-#### URL: `/api/note`
+#### URL: `/api/notes`
 #### Method: `POST`
 #### Description:
-Saves the passed note data.\
-The `target` property in the payload is the name of the note you want to target with your changes.\
-The `note` property contains the new note object you want to save. This can include additional information like
-`created` and `modified` as these will just be ignored so feel free to just use a modified note object.\
-You will also use this endpoint for creating notes, simply pass a value of `null` into the `target` property and the
-note will be created using the note object provided in the `note` property.
-#### Payload:
-```json
-{
-    "target": "Note name",
-    "note": {
-        "contents": "<h1>Note contents</h1>",
-        "name": "New note name"
-    }
-}
-```
-#### Sample response:
-This returns an updated list of notes.
-```json
-[
-  {
-    "contents": "<h4>This is Note 2</h4>",
-    "created": "2020-06-18T21:33:55Z",
-    "modified": "2020-06-19T19:26:34Z",
-    "name": "Note 2"
-  },
-  {
-    "contents": "<h1>This is a new note test</h1>",
-    "created": "2020-06-19T22:48:05Z",
-    "modified": "2020-06-20T01:07:53Z",
-    "name": "Note 3"
-  },
-  {
-    "contents": "<h1>From test document 1</h1>",
-    "created": "2020-06-18T21:46:19Z",
-    "modified": "2020-06-20T01:07:53Z",
-    "name": "Renamed1"
-  }
-]
-```
+Saves the notes data.

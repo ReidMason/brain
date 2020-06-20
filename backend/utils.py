@@ -1,3 +1,4 @@
+import json
 import os
 from datetime import datetime
 
@@ -19,3 +20,9 @@ def js_format_datetime(date: datetime) -> str:
     :return: A string in javascript supported date format
     """
     return date.strftime('%Y-%m-%dT%H:%M:%SZ')
+
+
+def ensure_file_exists(file_path: str):
+    if not os.path.exists(file_path):
+        with open(file_path, 'w') as f:
+            json.dump({}, f)
