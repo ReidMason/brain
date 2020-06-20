@@ -26,7 +26,7 @@ class Note:
             return f.read()
 
     def update(self, note_data: dict):
-        if note_data.get('name') != self.name:
+        if note_data.get('name') is not None and note_data.get('name') != self.name:
             new_path = os.path.join(os.path.dirname(self.filepath), note_data.get('name') + '.html')
             os.rename(self.filepath, new_path)
             self.filepath = new_path
