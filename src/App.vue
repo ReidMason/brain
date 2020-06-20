@@ -5,12 +5,11 @@
         <h1 class="fixed bottom-0 left-0 text-gray-100">Brain Early Access Build :^)</h1>
         <searchBar @listUpdated="(newItem) => {items.push(newItem)}" />
       </div>
-      <div class="bg-gray-300 h-full">
-        <div>
+      <editor class="bg-gray-300 h-full" />
+        <!-- <div>
           <div>{{ searchPhrase }}</div>
           <div v-for="tag in tags" :key="tag" >{{ tag }}</div>
-        </div>
-      </div>
+        </div> -->
     </div>
     <noteList class="md:order-first h-screen w-full md:w-1/4 xl:w-1/5 overflow-scroll overflow-y-auto overflow-x-hidden bg-gray-800 text-gray-100" />
   </div>
@@ -19,13 +18,15 @@
 <script>
 import searchBar from './components/searchBar.vue'
 import noteList from './components/noteList.vue'
+import editor from './components/editor.vue'
 import { mapState } from 'vuex'
 
 export default {
   name: 'App',
   components: {
     searchBar,
-    noteList
+    noteList,
+    editor
   },
   data: function () {
     return {
