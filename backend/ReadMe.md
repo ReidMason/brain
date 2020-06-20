@@ -24,19 +24,22 @@ Request: `.get("http://localhost:5000/api/notes")`
 ```json
 [
   {
-    "created": "2020-06-18T21:46:19Z",
-    "modified": "2020-06-19T22:31:11Z",
-    "name": "Note 1"
-  },
-  {
+    "contents": "<h4>This is Note 2</h4>",
     "created": "2020-06-18T21:33:55Z",
     "modified": "2020-06-19T19:26:34Z",
     "name": "Note 2"
   },
   {
+    "contents": "<h1>This is a new note test</h1>",
     "created": "2020-06-19T22:48:05Z",
-    "modified": "2020-06-20T00:28:45Z",
+    "modified": "2020-06-20T01:07:53Z",
     "name": "Note 3"
+  },
+  {
+    "contents": "<h1>From test document 1</h1>",
+    "created": "2020-06-18T21:46:19Z",
+    "modified": "2020-06-20T01:07:53Z",
+    "name": "Renamed1"
   }
 ]
 ```
@@ -86,19 +89,22 @@ This returns an updated list of notes.
 ```json
 [
   {
-    "created": "2020-06-18T21:46:19Z",
-    "modified": "2020-06-19T22:31:11Z",
-    "name": "Note 1"
-  },
-  {
+    "contents": "<h4>This is Note 2</h4>",
     "created": "2020-06-18T21:33:55Z",
     "modified": "2020-06-19T19:26:34Z",
     "name": "Note 2"
   },
   {
+    "contents": "<h1>This is a new note test</h1>",
     "created": "2020-06-19T22:48:05Z",
-    "modified": "2020-06-20T00:28:45Z",
+    "modified": "2020-06-20T01:07:53Z",
     "name": "Note 3"
+  },
+  {
+    "contents": "<h1>From test document 1</h1>",
+    "created": "2020-06-18T21:46:19Z",
+    "modified": "2020-06-20T01:07:53Z",
+    "name": "Renamed1"
   }
 ]
 ```

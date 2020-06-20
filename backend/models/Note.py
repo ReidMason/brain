@@ -11,6 +11,7 @@ class Note:
         self.created = None
         self.modified = None
         self.get_note_data()
+        self.contents = self.get_note_contents()
 
     def get_note_data(self):
         self.name = os.path.basename(self.filepath).rstrip('.html')
@@ -45,7 +46,8 @@ class Note:
         data = {
             'name'    : self.name,
             'created' : utils.js_format_datetime(self.created),
-            'modified': utils.js_format_datetime(self.modified)
+            'modified': utils.js_format_datetime(self.modified),
+            'contents': self.contents
         }
 
         if include_contents:
