@@ -1,6 +1,5 @@
 import json
 import os
-from pprint import pprint
 
 from flask import Flask, jsonify, request
 from flask_cors import CORS
@@ -50,6 +49,10 @@ def note_data(note_name: str):
 
 @app.route('/api/note', methods = ['POST'])
 def save_note_data():
+    """ Update a notes data. This could be it's name or contents.
+
+    :return: List of notes containing basic information
+    """
     if (note_content := request.json) is None:
         return "No note content provided", 400
     elif note_content.get('note') is None:
