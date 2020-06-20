@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="hover:bg-gray-900 cursor-pointer py-4 pl-4">
     <h3>{{ details.title }}</h3>
     <div>{{ details.content }}</div>
   </div>

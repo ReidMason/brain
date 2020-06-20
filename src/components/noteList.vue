@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>Note List:</h2>
+    <div class="h-12 text-2xl p-4 mb-4">Note List:</div>
     <noteItem v-for="note in notes" :key="note.id" :details="note" />
   </div>
 </template>
