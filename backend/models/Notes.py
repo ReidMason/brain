@@ -32,6 +32,13 @@ class Notes:
 
         self.notes.append(Note(note_path))
 
+    def update_links(self, old_name: str, new_name: str):
+        for note in self.notes:
+            contents = note.get_note_contents()
+            if f'[[{old_name}]]' in contents:
+                contents = contents.replace(f'[[{old_name}]]', f'[[{new_name}]]')
+                note.update({'contents': contents})
+
     def save_note(self, note_name: Optional[str], note_data: dict):
         self.load_notes()
         # If note name is none it needs to be created as there's no note being targeted for changes
@@ -39,6 +46,10 @@ class Notes:
             # Attempt to update a notes contents
             for note in self.notes:
                 if note.name == note_name:
+                    # The note is going to be renamed so we need to update all links
+                    if note.name != note_data.get('name'):
+                        self.update_links(note.name, note_data.get('name'))
+
                     note.update(note_data)
                     return
 
