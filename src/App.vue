@@ -1,28 +1,32 @@
 <template>
   <div id="app">
     <img src="./assets/logo.png" />
-    <h1>Brain v1</h1>
-    <div v-html="text" ></div>
+    <h1>Brain v0.1</h1>
+    <div>{{ searchPhrase }}</div>
+    <div v-for="tag in tags" :key="tag">{{ tag }}</div>
     <searchBar @listUpdated="(newItem) => {items.push(newItem)}" />
-    <item v-for="item in items" :key="item" :text="item" />
+    <noteList />
   </div>
 </template>
 
 <script>
 import searchBar from './components/searchBar.vue'
-import item from './components/item.vue'
+import noteList from './components/noteList.vue'
+import { mapState } from 'vuex'
 
 export default {
   name: 'App',
   components: {
     searchBar,
-    item
+    noteList
   },
   data: function () {
     return {
       items: [],
-      text: ''
     }
+  },
+  computed: {
+      ...mapState(['tags', 'searchPhrase'])
   }
 }
 </script>

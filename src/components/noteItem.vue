@@ -1,11 +1,14 @@
 <template>
-  <div>{{ text }}</div>
+  <div>
+    <h3>{{ details.title }}</h3>
+    <div>{{ details.content }}</div>
+  </div>
 </template>
 
 <script>
   export default {
     props: {
-        text: String,
+        details: Object,
     },
     data: function () {
       return {
