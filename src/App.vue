@@ -9,8 +9,9 @@
         <div class="h-full flex">
           <editor
             class="bg-gray-300 h-full w-full border-r-2 border-gray-600"
-            v-for="note in this.$store.getters.selectedNotes"
-            :key="note.id"
+            v-for="(note, index) in this.$store.getters.selectedNotes"
+            :key="index + note.id"
+            :index="index"
             :immutableNote="note"
           />
         </div>

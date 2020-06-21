@@ -6,14 +6,15 @@
         v-model="note.name"
         :readonly="!editing"
       />
+      <button class="mr-2 border-2 border-gray-600 bg-white outline-none w-16">Save</button>
       <button
-        class="mr-2 border-2 border-gray-600 bg-white outline-none"
-        @click="editing = !editing"
-      >Save</button>
-      <button
-        class="border-2 border-gray-600 bg-white outline-none w-16"
+        class="mr-2 border-2 border-gray-600 bg-white outline-none w-16"
         @click="editing = !editing"
       >{{ editing? 'View' : 'Edit' }}</button>
+      <button
+        class="border-2 border-gray-600 bg-white outline-none w-16"
+        @click="$store.state.selectedNotes.splice(index, 1);"
+      >X</button>
     </div>
     <div class="content">
       <textarea
@@ -29,7 +30,8 @@
 <script>
 export default {
   props: {
-    immutableNote: Object
+    immutableNote: Object,
+    index: Number
   },
   data: function() {
     return {
