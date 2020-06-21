@@ -8,7 +8,7 @@
     <!-- List of notes -->
     <div v-for="note in folder.notes" :key="note.id">
       <div @click="selectNote(note)">
-        <noteItem class="ml-4" :details="note"></noteItem>
+        <noteItem :details="note"></noteItem>
       </div>
     </div>
   </div>

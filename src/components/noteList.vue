@@ -1,6 +1,5 @@
 <template>
   <div>
-    <div class="h-12 text-2xl p-4 mb-4">Note List:</div>
     <!-- Collapsable list of notes -->
     <note-folder :folder="notes"></note-folder>
   </div>

@@ -1,5 +1,5 @@
 <template>
-  <div @click="$store.commit('setFocusedNote', note)">
+  <div class="flex flex-col h-full w-full bg-gray-300 border-r-2 border-gray-500" @click="$store.commit('setFocusedNote', note)">
     <div class="flex bg-gray-500">
       <input
         class="w-full px-2 py-1 text-2xl bg-gray-500 outline-none"

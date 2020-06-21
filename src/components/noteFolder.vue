@@ -1,7 +1,7 @@
 <template>
-  <div class="ml-4">
+  <div class="overflow-scroll overflow-y-auto overflow-x-hidden">
     <!-- Folder name -->
-    <div class="cursor-pointer" :class="{ 'bg-green-800': expanded }" @click="expanded = !expanded">
+    <div class="cursor-pointer pl-2 hover:bg-gray-900" :class="{ 'bg-green-800': expanded }" @click="expanded = !expanded">
       <noteItem :details="folder"></noteItem>
     </div>
 

@@ -1,6 +1,6 @@
 <template>
   <form @submit.prevent="$emit('listUpdated', fieldInput)">
-    <input class="block w-11/12 mx-auto mt-4 md:w-64 md:m-4 p-2 border-2 border-gray-300 rounded-md" type="text" name="prime" placeholder="SEARCH" @input="addSearchCriteria" v-model="fieldInput" />
+    <input class="block w-11/12 md:w-64 mx-auto m-3 md:m-2 pl-2 border-2 border-gray-300" type="text" name="prime" placeholder="SEARCH" @input="addSearchCriteria" v-model="fieldInput" />
   </form>
 </template>
 
