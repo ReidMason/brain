@@ -6,9 +6,11 @@
     </div>
 
     <!-- List of notes -->
-    <ul v-for="note in folder.notes" :key="note.id">
-      <noteItem class="ml-4" :details="note"></noteItem>
-    </ul>
+    <div v-for="note in folder.notes" :key="note.id">
+      <div @click="selectNote(note)">
+        <noteItem class="ml-4" :details="note"></noteItem>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -24,6 +26,11 @@ export default {
   },
   props: {
     folder: Object
+  },
+  methods: {
+    selectNote: function(note) {
+      this.$store.commit("addToSelectedNotes", note);
+    }
   }
 };
 </script>

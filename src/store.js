@@ -7,6 +7,8 @@ const store = new Vuex.Store({
     state: {
         tags: [],
         searchPhrase: "",
+        selectedNotes: [],
+        focusedNote: null,
         notes: {
             folders: [
                 {
@@ -51,13 +53,29 @@ const store = new Vuex.Store({
             ],
         },
     },
-    actions: {},
+    actions: {
+    },
     mutations: {
         setTags(state, tags) {
             state.tags = tags;
         },
         setSearchPhrase(state, phrase) {
             state.searchPhrase = phrase;
+        },
+        addToSelectedNotes(state, note) {
+            state.selectedNotes.push(note)
+            state.focusedNote = note
+        },
+        setFocusedNote(state, note) {
+            state.focusedNote = note;
+        }
+    },
+    getters: {
+        notes: (state) => {
+            return state.notes;
+        },
+        selectedNotes: (state) => {
+            return state.selectedNotes;
         }
     }
 });
