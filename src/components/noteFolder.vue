@@ -43,16 +43,19 @@ export default {
       // Triggered when the folder has an item dropped onto it
       // This item can either be a note or another folder
 
-      // First check if the element is already in this folders list of folders
+      // Element is already in this folders list of folders
       var folderAlreadyInFolders = this.folder.folders.includes(
         this.$store.getters.movingElement
       );
-      // Then check if the element is already in this folders list of notes
+      // Element is already in this folders list of notes
       var noteAlreadyInNotes = this.folder.notes.includes(
         this.$store.getters.movingElement
       );
+      // Element is being dropped onto itself
+      var elementIsItself = this.folder === this.$store.getters.movingElement;
+
       // If nether are true the element should be moved as this is a new location
-      if (!(folderAlreadyInFolders || noteAlreadyInNotes)) {
+      if (!(folderAlreadyInFolders || noteAlreadyInNotes || elementIsItself)) {
         // Add it to folders if it's a folder and add it to notes if it's a note
         if (this.$store.getters.movingElement.folders != null) {
           this.folder.folders.push(this.$store.getters.movingElement);
