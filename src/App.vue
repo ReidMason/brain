@@ -2,9 +2,7 @@
   <div id="app">
     <div class="flex flex-col h-screen">
       <div class="h-12 pb-4 md:pb-0 bg-gray-700">
-        <h1 class="fixed bottom-0 left-0 text-gray-100">
-          Brain Early Access Build :^)
-        </h1>
+        <h1 class="fixed bottom-0 left-0 text-gray-100">Brain Early Access Build :^)</h1>
         <searchBar
           @listUpdated="
             (newItem) => {
@@ -23,7 +21,7 @@
           "
         />
         <div class="flex w-full h-full md:w-3/4 xl:w-4/5">
-          <div class="h-full w-full flex">
+          <div class="h-full w-full flex bg-red-500">
             <editor
               v-for="(note, index) in this.$store.getters.selectedNotes"
               :key="index + note.id"
@@ -34,14 +32,12 @@
           <!-- <div>
           <div>{{ searchPhrase }}</div>
           <div v-for="tag in tags" :key="tag" >{{ tag }}</div>
-        </div>-->
+          </div>-->
         </div>
       </div>
       <div class="bg-gray-500 w-full px-2">
         <div v-if="focusedNote" class="flex flex-row-reverse">
-          <span class="ml-4"
-            >Words: {{ focusedNote.content.split(" ").length }}</span
-          >
+          <span class="ml-4">Words: {{ focusedNote.content.split(" ").length }}</span>
           <span>Characters: {{ focusedNote.content.length }}</span>
         </div>
       </div>
@@ -60,16 +56,16 @@ export default {
   components: {
     searchBar,
     noteList,
-    editor,
+    editor
   },
   data: function() {
     return {
       items: [],
-      selectedNote: null,
+      selectedNote: null
     };
   },
   computed: {
-    ...mapState(["tags", "searchPhrase", "focusedNote"]),
-  },
+    ...mapState(["tags", "searchPhrase", "focusedNote"])
+  }
 };
 </script>

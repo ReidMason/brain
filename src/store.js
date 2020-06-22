@@ -9,6 +9,7 @@ const store = new Vuex.Store({
         searchPhrase: "",
         selectedNotes: [],
         focusedNote: null,
+        movingElement: null,
         notes: {
             folders: [
                 {
@@ -35,6 +36,33 @@ const store = new Vuex.Store({
                             id: "21131288",
                             links: [],
                             name: "New 3",
+                            tags: [],
+                        },
+                    ],
+                }, {
+                    folders: [],
+                    id: "111133",
+                    name: "New Folder 2",
+                    notes: [
+                        {
+                            content: "<h1>Note content 1 2</h1>",
+                            id: "211312553",
+                            links: ["21131266"],
+                            name: "New 1 2",
+                            tags: ["#tag"],
+                        },
+                        {
+                            content: "<h1>Note content 2 2</h1>",
+                            id: "211312663",
+                            links: [],
+                            name: "New 2 2",
+                            tags: ["#tag"],
+                        },
+                        {
+                            content: "<h1>Note content 3 2</h1>",
+                            id: "211312883",
+                            links: [],
+                            name: "New 3 2",
                             tags: [],
                         },
                     ],
@@ -68,6 +96,9 @@ const store = new Vuex.Store({
         },
         setFocusedNote(state, note) {
             state.focusedNote = note;
+        },
+        setMovingElement(state, note) {
+            state.movingElement = note;
         }
     },
     getters: {
@@ -76,6 +107,9 @@ const store = new Vuex.Store({
         },
         selectedNotes: (state) => {
             return state.selectedNotes;
+        },
+        movingElement: (state) => {
+            return state.movingElement;
         }
     }
 });
