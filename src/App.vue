@@ -21,7 +21,7 @@
           "
         />
         <div class="flex w-full h-full md:w-3/4 xl:w-4/5">
-          <div class="h-full w-full flex bg-red-500">
+          <div class="h-full w-full flex bg-gray-500">
             <editor
               v-for="(note, index) in this.$store.getters.selectedNotes"
               :key="index + note.id"
@@ -42,13 +42,21 @@
         </div>
       </div>
     </div>
+    <div
+      id="dragElement"
+      class="bg-gray-500 p-1 rounded border-2 border-gray-800"
+      style="position: absolute; white-space: nowrap;"
+      v-if="$store.getters.movingElement"
+    >
+      <p>{{ $store.getters.movingElement.name }}</p>
+    </div>
   </div>
 </template>
 
 <script>
-import searchBar from "./components/searchBar.vue";
-import noteList from "./components/noteList.vue";
-import editor from "./components/editor.vue";
+import searchBar from "./components/searchBar";
+import noteList from "./components/noteList";
+import editor from "./components/editor";
 import { mapState } from "vuex";
 
 export default {
@@ -66,6 +74,17 @@ export default {
   },
   computed: {
     ...mapState(["tags", "searchPhrase", "focusedNote"])
+  },
+  mounted() {
+    document.addEventListener(
+      "drag",
+      function(ev) {
+        var element = document.getElementById("dragElement");
+        element.style.left = ev.clientX + 10 + "px";
+        element.style.top = ev.clientY + 10 + "px";
+      },
+      false
+    );
   }
 };
 </script>

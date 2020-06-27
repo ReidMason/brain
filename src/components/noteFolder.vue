@@ -63,7 +63,10 @@ export default {
           this.folder.notes.push(this.$store.getters.movingElement);
         }
         // Move was susccessful so set the movingElement to null so the element knows to emit the delete event
-        this.$store.commit("setMovingElement", null);
+        this.$store.commit("setMovingElement", true);
+      } else {
+        // Move was unsuccessful
+        this.$store.commit("setMovingElement", false);
       }
 
       // Regardless of anything being moved we need to act as if the drag has left the element to remove the highlight

@@ -1,5 +1,8 @@
 <template>
-  <div class="flex flex-col h-full w-full bg-gray-300 border-r-2 border-gray-500" @click="$store.commit('setFocusedNote', note)">
+  <div
+    class="flex flex-col h-full w-full bg-gray-300 border-r-2 border-gray-500"
+    @click="$store.commit('setFocusedNote', note)"
+  >
     <div class="flex bg-gray-500">
       <input
         class="w-full px-2 py-1 text-2xl bg-gray-500 outline-none"
@@ -16,18 +19,16 @@
         @click="$store.state.selectedNotes.splice(index, 1);"
       >X</button>
     </div>
-    <div class="content">
-      <textarea
-        class="w-full h-full bg-gray-400 p-4 outline-none resize-none"
-        v-if="editing"
-        v-model="note.content"
-      ></textarea>
+    <div class="content" style="background-color: #1e1e1e;">
+      <div class="w-full h-full" id="container" v-if="editing" language="javascript" />
       <div class="p-4" v-else v-html="note.content"></div>
     </div>
   </div>
 </template>
 
 <script>
+import * as monaco from "monaco-editor";
+
 export default {
   props: {
     immutableNote: Object,
@@ -36,8 +37,16 @@ export default {
   data: function() {
     return {
       editing: true,
+      options: {},
       note: this.immutableNote
     };
+  },
+  mounted() {
+    monaco.editor.create(document.getElementById("container"), {
+      value: this.note.content,
+      language: "html",
+      theme: "vs-dark"
+    });
   }
 };
 </script>

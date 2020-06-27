@@ -6,7 +6,7 @@
     @dragstart="dragStart"
     @dragend="dragend"
   >
-    <h3>{{ details.name }}</h3>
+    <header>{{ details.name }}</header>
   </div>
 </template>
 
@@ -26,16 +26,16 @@ export default {
       this.$store.commit("setMovingElement", this.details);
       // Remove drag and drop ghost image
       e.dataTransfer.setDragImage(new Image(), 0, 0);
-      e.dataTransfer.effectAllowed = "move";
       this.beingDragged = true;
     },
     dragend: function() {
       // The item has been released so we need to remove it if it has been moved to a different folder
-      // The movingElement store value will be set to null if the element was moved
-      // So only emit the delete event if the store value is null
-      if (this.$store.getters.movingElement === null) {
+      // The movingElement store value will be set to true if the element was moved
+      // So only emit the delete event if the store value is true
+      if (this.$store.getters.movingElement === true) {
         this.$emit("delete", this.details);
       }
+      this.$store.commit("setMovingElement", null);
       this.beingDragged = false;
     }
   }
