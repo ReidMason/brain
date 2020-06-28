@@ -1,10 +1,9 @@
 <template>
   <form @submit.prevent="$emit('listUpdated', fieldInput)">
     <input
-      class="pl-1 block focus:outline-none w-full bg-gray-700 text-white"
+      class="pl-2 py-1 block focus:outline-none w-full bg-nord-1 rounded text-white"
       type="text"
-      name="prime"
-      placeholder="SEARCH"
+      placeholder="Search"
       @input="addSearchCriteria"
       v-model="fieldInput"
     />
