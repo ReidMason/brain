@@ -31,7 +31,8 @@ import chevronDownIcon from "./icons/chevronDownIcon";
 export default {
   name: "noteFolder",
   props: {
-    folder: Object
+    folder: Object,
+    startExpanded: Boolean
   },
   components: {
     noteItem,
@@ -40,7 +41,7 @@ export default {
   },
   data: function() {
     return {
-      expanded: this.folder.name === "root",
+      expanded: this.startExpanded,
       hovered: false,
       dragover: false
     };

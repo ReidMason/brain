@@ -40,6 +40,7 @@
 import editor from "./components/editor";
 import { mapState } from "vuex";
 import sidebar from "./components/sidebar";
+import axios from "axios";
 
 export default {
   name: "App",
@@ -54,7 +55,13 @@ export default {
     };
   },
   computed: {
-    ...mapState(["tags", "searchPhrase", "focusedNote"])
+    ...mapState(["tags", "searchPhrase", "focusedNote", "endpoint"])
+  },
+  created() {
+    // Get the notes data
+    axios.get(`${this.endpoint}/notes`).then(response => {
+      this.$store.state.notes = response.data;
+    });
   },
   mounted() {
     document.addEventListener(

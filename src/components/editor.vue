@@ -9,7 +9,10 @@
         v-model="note.name"
         :readonly="!editing"
       />
-      <button class="mr-2 border-2 border-gray-600 bg-white focus:outline-none w-16">Save</button>
+      <button
+        class="mr-2 border-2 border-gray-600 bg-white focus:outline-none w-16"
+        @click="$store.dispatch('save')"
+      >Save</button>
       <button
         class="mr-2 border-2 border-gray-600 bg-white focus:outline-none w-16"
         @click="editing = !editing"
@@ -42,11 +45,15 @@ export default {
     };
   },
   mounted() {
-    monaco.editor.create(document.getElementById("container"), {
+    var editor = monaco.editor.create(document.getElementById("container"), {
       value: this.note.content,
       language: "html",
       theme: "vs-dark"
     });
+    // Keep note content in sync
+    editor.onDidChangeModelContent(
+      () => (this.note.content = editor.getValue())
+    );
   }
 };
 </script>
