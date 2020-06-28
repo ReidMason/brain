@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex flex-col h-full w-full bg-gray-300 border-r-2 border-gray-500"
+    class="flex flex-col h-full bg-gray-300 border-r-2 border-gray-500"
     @click="$store.commit('setFocusedNote', note)"
   >
     <div class="flex bg-gray-500">

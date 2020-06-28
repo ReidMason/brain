@@ -2,24 +2,31 @@
   <div class="overflow-scroll overflow-y-auto overflow-x-hidden">
     <!-- Folder name -->
     <div
-      class="cursor-pointer pl-2 hover:bg-gray-900"
-      :class="{ 'bg-green-800': expanded, 'text-red-700' : hovered }"
+      class="flex"
       @click="expanded = !expanded"
       @drop="drop"
       @dragenter.prevent="dragenter"
       @dragleave.prevent="dragleave"
       @dragover.prevent
     >
-      <noteItem :details="folder" @delete="remove"></noteItem>
+      <!-- Expand and collapse icons -->
+      <div class="w-5 my-auto">
+        <chevron-right-icon v-if="expanded" />
+        <chevron-down-icon v-else />
+      </div>
+      <!-- Folder name -->
+      <noteItem :class="{'bg-nord-9': hovered}" :details="folder" @delete="remove"></noteItem>
     </div>
 
     <!-- Folder contents both notes and nested folders -->
-    <noteFolderContents class="ml-4" :folder="folder" v-if="expanded"></noteFolderContents>
+    <noteFolderContents :folder="folder" v-if="expanded"></noteFolderContents>
   </div>
 </template>
 
 <script>
 import noteItem from "./noteItem";
+import chevronRightIcon from "./icons/chevronRightIcon";
+import chevronDownIcon from "./icons/chevronDownIcon";
 
 export default {
   name: "noteFolder",
@@ -27,12 +34,15 @@ export default {
     folder: Object
   },
   components: {
-    noteItem
+    noteItem,
+    chevronRightIcon,
+    chevronDownIcon
   },
   data: function() {
     return {
-      expanded: true,
-      hovered: false
+      expanded: this.folder.name === "root",
+      hovered: false,
+      dragover: false
     };
   },
   beforeCreate: function() {
@@ -64,6 +74,8 @@ export default {
         }
         // Move was susccessful so set the movingElement to null so the element knows to emit the delete event
         this.$store.commit("setMovingElement", true);
+        // Expand the folder to show it was moved
+        this.expanded = true;
       } else {
         // Move was unsuccessful
         this.$store.commit("setMovingElement", false);

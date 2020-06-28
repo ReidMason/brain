@@ -1,7 +1,7 @@
 <template>
   <div
-    class="cursor-pointer pl-2 hover:bg-gray-900"
-    :style="'background-color: ' + (beingDragged ? 'blue' : '')"
+    class="cursor-pointer w-full"
+    :class="{'bg-nord-10': beingDragged, 'hover:bg-nord-3': !beingDragged, 'bg-nord-3': isFocused}"
     draggable="true"
     @dragstart="dragStart"
     @dragend="dragend"
@@ -19,6 +19,14 @@ export default {
     return {
       beingDragged: false
     };
+  },
+  computed: {
+    isFocused: function() {
+      return (
+        this.$store.state.focusedNote &&
+        this.details.id === this.$store.state.focusedNote.id
+      );
+    }
   },
   methods: {
     dragStart: function(e) {

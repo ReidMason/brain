@@ -1,13 +1,13 @@
 <template>
-  <div id="app">
+  <div id="app" class="text-nord-4">
     <div class="flex fexl-row">
       <sidebar></sidebar>
       <!-- Main screen content -->
-      <div class="flex flex-col h-screen w-full bg-gray-500">
+      <div class="h-screen w-full bg-nord-1">
         <!-- Editor section -->
-        <div class="flex h-full">
+        <div class="h-full flex">
           <editor
-            v-for="(note, index) in this.$store.getters.selectedNotes"
+            v-for="(note, index) in $store.getters.selectedNotes"
             :key="index + note.id"
             :index="index"
             :immutableNote="note"
@@ -15,7 +15,7 @@
         </div>
 
         <!-- Details footer -->
-        <div class="bg-gray-500 w-full px-2">
+        <div class="bg-nord-0 px-2">
           <div v-if="focusedNote" class="flex flex-row-reverse">
             <span class="ml-4">Words: {{ focusedNote.content.split(" ").length }}</span>
             <span>Characters: {{ focusedNote.content.length }}</span>
@@ -26,7 +26,7 @@
       <!-- Element for dragging notes and folders -->
       <div
         id="dragElement"
-        class="bg-gray-500 p-1 rounded border-2 border-gray-800"
+        class="bg-nord-1 p-1 rounded border-2 border-nord-3"
         style="position: absolute; white-space: nowrap;"
         v-if="$store.getters.movingElement"
       >
@@ -61,8 +61,8 @@ export default {
       "drag",
       function(ev) {
         var element = document.getElementById("dragElement");
-        element.style.left = ev.clientX + 10 + "px";
-        element.style.top = ev.clientY + 10 + "px";
+        element.style.left = ev.clientX + 12 + "px";
+        element.style.top = ev.clientY + -20 + "px";
       },
       false
     );

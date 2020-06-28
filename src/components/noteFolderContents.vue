@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="pl-2">
     <!-- Folder title -->
     <div v-for="folder in folder.folders" :key="folder.id">
       <note-folder v-if="folder.folders" :folder="folder" @delete="removeFolder"></note-folder>
@@ -7,7 +7,9 @@
 
     <!-- List of notes -->
     <div v-for="note in folder.notes" :key="note.id">
-      <div @click="selectNote(note)">
+      <div class="flex" @click="selectNote(note)">
+        <!-- Spacer div to keep the notes inline with the folders -->
+        <div class="w-5"></div>
         <noteItem :details="note" @delete="removeNote"></noteItem>
       </div>
     </div>
