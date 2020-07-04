@@ -52,13 +52,8 @@ export default {
     return {
       editing: true,
       options: {},
-      note: this.immutableNote,
-      createdTime: null
+      note: this.immutableNote
     };
-  },
-  created() {
-    this.createdTime = new Date().getTime();
-    console.log(this.width);
   },
   computed: {
     width: function() {
