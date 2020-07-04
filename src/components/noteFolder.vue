@@ -53,6 +53,7 @@ export default {
     drop: function() {
       // Triggered when the folder has an item dropped onto it
       // This item can either be a note or another folder
+      // This function is long and should proabably be broken up at the very least
 
       // Element is already in this folders list of folders
       var folderAlreadyInFolders = this.folder.folders.includes(

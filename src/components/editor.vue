@@ -1,6 +1,7 @@
 <template>
   <div
     class="flex flex-col h-full bg-gray-300 border-r-2 border-gray-500"
+    :style="`width: ${width}%;`"
     @click="$store.commit('setFocusedNote', note)"
   >
     <div class="flex bg-gray-500">
@@ -23,37 +24,46 @@
       >X</button>
     </div>
     <div class="content" style="background-color: #1e1e1e;">
-      <div class="w-full h-full" id="container" v-if="editing" language="javascript" />
-      <div class="p-4" v-else v-html="note.content"></div>
+      <MonacoEditor
+        class="w-full h-full border-r-2 border-red-700"
+        theme="vs-dark"
+        language="html"
+        :value="note.content"
+        @change="(newContent) => note.content = newContent"
+        v-show="editing"
+      ></MonacoEditor>
+      <div class="p-4" v-show="!editing" v-html="note.content"></div>
     </div>
   </div>
 </template>
 
 <script>
-import * as monaco from "monaco-editor";
+import MonacoEditor from "monaco-editor-vue";
 
 export default {
   props: {
     immutableNote: Object,
     index: Number
   },
+  components: {
+    MonacoEditor
+  },
   data: function() {
     return {
       editing: true,
       options: {},
-      note: this.immutableNote
+      note: this.immutableNote,
+      createdTime: null
     };
   },
-  mounted() {
-    var editor = monaco.editor.create(document.getElementById("container"), {
-      value: this.note.content,
-      language: "html",
-      theme: "vs-dark"
-    });
-    // Keep note content in sync
-    editor.onDidChangeModelContent(
-      () => (this.note.content = editor.getValue())
-    );
+  created() {
+    this.createdTime = new Date().getTime();
+    console.log(this.width);
+  },
+  computed: {
+    width: function() {
+      return 100 / this.$store.state.selectedNotes.length;
+    }
   }
 };
 </script>
