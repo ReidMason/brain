@@ -31,6 +31,7 @@
               :immutableNote="note"
             />
           </div>
+          <!-- TODO: Find a place for the tags and implement them properly -->
           <!-- <div>
           <div>{{ searchPhrase }}</div>
           <div v-for="tag in tags" :key="tag" >{{ tag }}</div>
