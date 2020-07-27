@@ -12,7 +12,7 @@ namespace BrainBackend.Controllers
         [HttpGet]
         public async Task<IActionResult> GetNotes()
         {
-            return Ok(NotesService.GetAllNotes());
+            return Ok(NotesService.GetRootFolder());
         }
 
         [HttpGet("{id}")]
@@ -26,19 +26,12 @@ namespace BrainBackend.Controllers
         {
             try
             {
-                return Ok(NotesService.CreateNote(newNote));
+                 return Ok(NotesService.CreateNote(newNote));
             }
             catch (NoteAlreadyExistsException)
             {
                 return BadRequest("A Note with that name already exists.");
             }
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteNote(string id)
-        {
-            NotesService.DeleteNote(id);
-            return Ok();
         }
 
         [HttpPut("{id}")]
@@ -52,6 +45,13 @@ namespace BrainBackend.Controllers
             {
                 return BadRequest("A note with that id doesn't exist");
             }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteNote(string id)
+        {
+            NotesService.DeleteNote(id);
+            return Ok();
         }
     }
 }

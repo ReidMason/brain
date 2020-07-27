@@ -8,27 +8,19 @@ namespace BrainBackend.Models
 {
     public class Notes
     {
-
-        public List<Note> AllNotes { get; }
+        public Folder Root { get; }
 
         public Notes()
         {
-            AllNotes = new List<Note>();
-            GetAllNotes(Constants.NotesDirectory);
+            Root = new Folder(Constants.NotesDirectory, null);
         }
 
-        private void GetAllNotes(string filepath)
+        public List<Note> AllNotes
         {
-            AllNotes.AddRange(Directory.GetFiles(filepath).Select(file => new Note(file)).ToList());
-            foreach(string dir in Directory.GetDirectories(filepath))
-                GetAllNotes(dir);
-        }
-
-        public Note CreateNote(NoteDAL newNote)
-        {
-            var note = new Note(newNote.Name, newNote.FolderTree, newNote.Content);
-            AllNotes.Add(note);
-            return note;
+            get
+            {
+                return Folder.AllNotes;
+            }
         }
     }
 }

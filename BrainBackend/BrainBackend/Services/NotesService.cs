@@ -9,27 +9,32 @@ namespace BrainBackend.Services
 {
     public static class NotesService
     {
-        internal static List<Note> GetAllNotes()
+        internal static Folder GetRootFolder()
         {
-            return new Notes().AllNotes;
+            return new Notes().Root;
         }
 
         internal static Note GetNote(string noteId)
         {
             var notes = new Notes();
-
-            return notes.AllNotes.FirstOrDefault(x => x.Id == noteId);
+            Note note = notes.AllNotes.FirstOrDefault(x => x.Id == noteId);
+            if (note != null)
+            {
+                note.Content = note.GetContent();
+            }
+                
+            return note;
         }
 
         internal static Note CreateNote(NoteDAL newNote)
         {
             var notes = new Notes();
-            if (notes.AllNotes.Where(note => note.Filepath == newNote.Filepath).FirstOrDefault() != null)
+            Folder parent = Folder.AllFolders.Where(x => x.Id == newNote.ParentId).FirstOrDefault();
+            if (parent == null)
             {
-                throw new NoteAlreadyExistsException();
+                throw new FolderNotFound();
             }
-
-            return notes.CreateNote(newNote);
+            return parent.CreateNote(newNote);
         }
 
         internal static void DeleteNote(string id)
@@ -50,14 +55,26 @@ namespace BrainBackend.Services
                 throw new NoteNotFound();
             }
 
-            // Rename or file moved
-            if (targetNote.Filepath != newNote.Filepath)
+            // Note moved
+            if (newNote.ParentId != null && targetNote.ParentId != newNote.ParentId)
             {
-                targetNote.Move(newNote.FolderTree);
+                Folder parent = Folder.AllFolders.Where(x => x.Id == newNote.ParentId).FirstOrDefault();
+                if (parent == null)
+                {
+                    throw new FolderNotFound();
+                }
+
+                targetNote.Move(parent);
+            }
+
+            // Note renamed
+            if (newNote.Name != null && targetNote.Name != newNote.Name)
+            {
+                targetNote.Rename(newNote.Name);
             }
 
             // Content change
-            if (targetNote.Content != newNote.Content)
+            if (newNote.Content != null && targetNote.Content != newNote.Content)
             {
                 targetNote.Content = newNote.Content;
                 targetNote.Save();
@@ -76,6 +93,12 @@ namespace BrainBackend.Services
     public class NoteNotFound : Exception
     {
         public NoteNotFound()
+        { }
+    }
+
+    public class FolderNotFound : Exception
+    {
+        public FolderNotFound()
         { }
     }
 }

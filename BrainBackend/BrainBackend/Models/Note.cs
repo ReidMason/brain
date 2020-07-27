@@ -6,56 +6,90 @@ using System.Linq;
 
 namespace BrainBackend.Models
 {
-    public class Note
+    public class Note : BrainFile
     {
-        public string Name { get; set; }
-        public string Id { get; set; }
+        public string Folderpath { get; set; }
         public string Content { get; set; }
-        public List<string> FolderTree { get; set; }
-        public string Filepath { get { return Path.Combine(Constants.NotesDirectory, String.Join(Path.DirectorySeparatorChar, FolderTree) , $"{Name}.md"); } }
+        public string Filename { get
+            {
+                return $"{Name}.md";
+            } 
+        }
+        public string Id
+        {
+            get
+            {
+                var file = new FileInfo(Filepath);
+                return file.CreationTime.Ticks.ToString();
+            }
+        }
+
+        public string Filepath
+        { 
+            get
+            {
+                return Path.Combine(Folderpath, Filename);
+            }
+        }
+
+        public string GetContent()
+        {
+            return File.ReadAllText(Filepath);   
+        }
 
         // Creating new note with file
-        public Note(string name, List<string> folderTree, string content)
+        public Note(string name, string content, string folderpath, string parentId)
         {
             Name = name;
-            FolderTree = folderTree;
             Content = content;
+            Folderpath = folderpath;
+            ParentId = parentId;
             Save();
-            var file = new FileInfo(Filepath);
-            Id = file.CreationTime.Ticks.ToString();
         }
 
         // Loading note where file already exists
-        public Note(string filepath)
+        public Note(string filepath, string parentId)
         {
             var file = new FileInfo(filepath);
+            Folderpath = Path.GetDirectoryName(filepath);
             Name = file.Name.Replace(file.Extension, "");
-            //Filepath = filepath.TrimStart(Constants.NotesDirectory.ToCharArray()).TrimEnd($"{Name}.md".ToCharArray());
-            FolderTree = filepath.TrimStart(Constants.NotesDirectory.ToCharArray()).TrimEnd($"{Name}.md".ToCharArray()).Split(Path.DirectorySeparatorChar).ToList();
-            Id = file.CreationTime.Ticks.ToString();
+            ParentId = parentId;
         }
 
         public void Save()
         {
-            Directory.CreateDirectory(Path.Combine(Constants.NotesDirectory, String.Join(Path.DirectorySeparatorChar, FolderTree)));
             File.WriteAllText(Filepath, Content);
         }
 
-        public void Move(List<string> folderTree)
+        public void Move(Folder newParent)
         {
-            if (File.Exists(Path.Combine(Constants.NotesDirectory, String.Join(Path.DirectorySeparatorChar, folderTree), $"{Name}.md")))
+            if (newParent.Notes.Select(x => x.Name == Name).FirstOrDefault())
             {
                 throw new NoteAlreadyExistsException();
             }
-
-            string oldFilepath = Filepath;
-            FolderTree = folderTree;
-            File.Move(oldFilepath, Filepath);
+            string newFilepath = Path.Combine(newParent.Filepath, Filename);
+            File.Move(Filepath, newFilepath);
+            
+            ParentId = newParent.Id;
+            Folderpath = newParent.Filepath;
         }
 
         public void Delete()
         {
             File.Delete(Filepath);
+        }
+
+        internal void Rename(string newName)
+        {
+            string oldFilepath = Filepath;
+            Name = newName;
+
+            if (File.Exists(Filepath))
+            {
+                throw new NoteAlreadyExistsException();
+            }    
+
+            File.Move(oldFilepath, Filepath);
         }
     }
 }

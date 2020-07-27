@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace BrainBackend.Models
 {
-    public class Constants
+    public class BrainFile
     {
-        public const string NotesDirectory = "../../data/notes";
+        public string ParentId { get; set; }
+        public string Name { get; set; }      
     }
 }
