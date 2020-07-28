@@ -24,11 +24,17 @@
       ></textarea>
       <div class="p-4" v-else v-html="note.content"></div>
     </div>
+    <tagList :tags="note.tags" />
   </div>
 </template>
 
 <script>
+import tagList from './tagList';
+
 export default {
+  components: {
+    tagList
+  },
   props: {
     immutableNote: Object,
     index: Number

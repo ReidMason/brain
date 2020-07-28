@@ -35,7 +35,7 @@ const store = new Vuex.Store({
                             id: "21131288",
                             links: [],
                             name: "New 3",
-                            tags: [],
+                            tags: ["#test", "#dummy"],
                         },
                     ],
                 },

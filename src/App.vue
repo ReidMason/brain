@@ -74,3 +74,12 @@ export default {
   },
 };
 </script>
+
+<style>
+  input:focus,
+  select:focus,
+  textarea:focus,
+  button:focus {
+      outline: none;
+  }
+</style>
