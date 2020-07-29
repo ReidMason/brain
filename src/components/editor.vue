@@ -26,17 +26,17 @@
     <div class="content" style="background-color: #1e1e1e;">
       <div class="p-4" v-show="!editing" v-html="note.content"></div>
     </div>
-    <tagList :tags="note.tags" />
+    <!-- <tagList :tags="note.tags" /> -->
   </div>
 </template>
 
 <script>
-import tagList from './tagList';
+// import tagList from './tagList';
 
 export default {
-  components: {
-    tagList
-  },
+  // components: {
+  //   tagList
+  // },
   props: {
     immutableNote: Object,
     index: Number

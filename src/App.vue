@@ -5,6 +5,7 @@
       <!-- Main screen content -->
       <div class="h-screen w-full bg-nord-1">
         <!-- Editor section -->
+        <tagList :tags="tags" />
         <div class="h-full flex">
           <editor
             v-for="(note, index) in $store.getters.selectedNotes"
@@ -46,17 +47,20 @@ import editor from "./components/editor";
 import { mapState } from "vuex";
 import sidebar from "./components/sidebar";
 import axios from "axios";
+import tagList from './components/tagList';
 
 export default {
   name: "App",
   components: {
     editor,
-    sidebar
+    sidebar,
+    tagList
   },
   data: function() {
     return {
       items: [],
-      selectedNote: null
+      selectedNote: null,
+      tags: ["#first", "#second", "#third"]
     };
   },
   computed: {
