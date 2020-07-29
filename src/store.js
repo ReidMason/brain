@@ -1,3 +1,4 @@
+import axios from "axios";
 import Vue from "vue";
 import Vuex from "vuex";
 
@@ -5,55 +6,19 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
     state: {
+        endpoint: "http://10.128.0.108:5000/api",
         tags: [],
         searchPhrase: "",
         selectedNotes: [],
         focusedNote: null,
-        notes: {
-            folders: [
-                {
-                    folders: [],
-                    id: "11113",
-                    name: "New Folder",
-                    notes: [
-                        {
-                            content: "<h1>Note content 1</h1>",
-                            id: "21131255",
-                            links: ["21131266"],
-                            name: "New 1",
-                            tags: ["#tag"],
-                        },
-                        {
-                            content: "<h1>Note content 2</h1>",
-                            id: "21131266",
-                            links: [],
-                            name: "New 2",
-                            tags: ["#tag"],
-                        },
-                        {
-                            content: "<h1>Note content 3</h1>",
-                            id: "21131288",
-                            links: [],
-                            name: "New 3",
-                            tags: ["#test", "#dummy"],
-                        },
-                    ],
-                },
-            ],
-            id: "root",
-            name: "root",
-            notes: [
-                {
-                    content: "<h1>Note content</h1>",
-                    id: "12353566",
-                    links: ["21131255"],
-                    name: "New Note",
-                    tags: ["#tag"],
-                },
-            ],
-        },
+        movingElement: null,
+        notes: {}
     },
     actions: {
+        save(state) {
+            console.log(state.state.notes)
+            axios.post(`${state.state.endpoint}/notes`, state.state.notes)
+        }
     },
     mutations: {
         setTags(state, tags) {
@@ -68,6 +33,9 @@ const store = new Vuex.Store({
         },
         setFocusedNote(state, note) {
             state.focusedNote = note;
+        },
+        setMovingElement(state, note) {
+            state.movingElement = note;
         }
     },
     getters: {
@@ -76,6 +44,9 @@ const store = new Vuex.Store({
         },
         selectedNotes: (state) => {
             return state.selectedNotes;
+        },
+        movingElement: (state) => {
+            return state.movingElement;
         }
     }
 });

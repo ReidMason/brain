@@ -1,35 +1,24 @@
 <template>
-  <div id="app">
-    <div class="flex flex-col h-screen">
-      <div class="h-12 pb-4 md:pb-0 bg-gray-700">
-        <h1 class="fixed bottom-0 left-0 text-gray-100">
-          Brain Early Access Build :^)
-        </h1>
-        <searchBar
-          @listUpdated="
-            (newItem) => {
-              items.push(newItem);
-            }
-          "
-        />
-      </div>
-      <div class="flex flex-col md:flex-row h-full overflow-auto">
-        <noteList
-          class="h-64 md:h-full w-full md:w-1/4 xl:w-1/5 bg-gray-800 text-gray-100 overflow-scroll overflow-y-auto overflow-x-hidden"
-          @noteSelected="
-            (node) => {
-              console.log('test');
-            }
-          "
-        />
-        <div class="flex w-full h-full md:w-3/4 xl:w-4/5">
-          <div class="h-full w-full flex">
-            <editor
-              v-for="(note, index) in this.$store.getters.selectedNotes"
-              :key="index + note.id"
-              :index="index"
-              :immutableNote="note"
-            />
+  <div id="app" class="text-nord-4">
+    <div class="flex fexl-row">
+      <sidebar></sidebar>
+      <!-- Main screen content -->
+      <div class="h-screen w-full bg-nord-1">
+        <!-- Editor section -->
+        <div class="h-full flex">
+          <editor
+            v-for="(note, index) in $store.getters.selectedNotes"
+            :key="index + note.id"
+            :index="index"
+            :immutableNote="note"
+          />
+        </div>
+
+        <!-- Details footer -->
+        <div class="bg-nord-0 px-2">
+          <div v-if="focusedNote" class="flex flex-row-reverse">
+            <span class="ml-4">Words: {{ focusedNote.content.split(" ").length }}</span>
+            <span>Characters: {{ focusedNote.content.length }}</span>
           </div>
           <!-- TODO: Find a place for the tags and implement them properly -->
           <!-- <div>
@@ -38,40 +27,58 @@
         </div>-->
         </div>
       </div>
-      <div class="bg-gray-500 w-full px-2">
-        <div v-if="focusedNote" class="flex flex-row-reverse">
-          <span class="ml-4"
-            >Words: {{ focusedNote.content.split(" ").length }}</span
-          >
-          <span>Characters: {{ focusedNote.content.length }}</span>
-        </div>
+
+      <!-- Element for dragging notes and folders -->
+      <div
+        id="dragElement"
+        class="bg-nord-1 p-1 rounded border-2 border-nord-3"
+        style="position: absolute; white-space: nowrap;"
+        v-if="$store.getters.movingElement"
+      >
+        <p>{{ $store.getters.movingElement.name }}</p>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import searchBar from "./components/searchBar.vue";
-import noteList from "./components/noteList.vue";
-import editor from "./components/editor.vue";
+import editor from "./components/editor";
 import { mapState } from "vuex";
+import sidebar from "./components/sidebar";
+import axios from "axios";
 
 export default {
   name: "App",
   components: {
-    searchBar,
-    noteList,
     editor,
+    sidebar
   },
   data: function() {
     return {
       items: [],
-      selectedNote: null,
+      selectedNote: null
     };
   },
   computed: {
-    ...mapState(["tags", "searchPhrase", "focusedNote"]),
+    ...mapState(["tags", "searchPhrase", "focusedNote", "endpoint"])
   },
+  created() {
+    // Get the notes data
+    axios.get(`${this.endpoint}/notes`).then(response => {
+      this.$store.state.notes = response.data;
+    });
+  },
+  mounted() {
+    document.addEventListener(
+      "drag",
+      function(ev) {
+        var element = document.getElementById("dragElement");
+        element.style.left = ev.clientX + 12 + "px";
+        element.style.top = ev.clientY + -20 + "px";
+      },
+      false
+    );
+  }
 };
 </script>
 
