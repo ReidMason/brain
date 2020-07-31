@@ -1,28 +1,34 @@
 <template>
   <form @submit.prevent="$emit('listUpdated', fieldInput)">
-    <input class="block w-11/12 mx-auto mt-4 md:w-64 md:m-4 p-2 border-2 border-gray-300 rounded-md" type="text" name="prime" placeholder="SEARCH" @input="addSearchCriteria" v-model="fieldInput" />
+    <input
+      class="pl-2 py-1 block focus:outline-none w-full bg-nord-1 rounded text-white"
+      type="text"
+      placeholder="Search"
+      @input="addSearchCriteria"
+      v-model="fieldInput"
+    />
   </form>
 </template>
 
 <script>
 export default {
+  name: "searchBar",
   data: function() {
     return {
-      fieldInput: "",
+      fieldInput: ""
     };
   },
   methods: {
     addSearchCriteria: function() {
-      let rule = /(^|\s)(#[^\s]{1,})/g;
+      let rule = /(#[^\s || #]{1,})/g;
 
       if (this.fieldInput.match(rule)) {
-
-        this.$store.commit('setTags', this.fieldInput.match(rule))
-
+        this.$store.commit("setTags", this.fieldInput.match(rule));
+      } else {
+        this.$store.commit("setTags", '');
       }
 
-      this.$store.commit('setSearchPhrase', this.fieldInput.replace(rule, ''))
-
+      this.$store.commit("setSearchPhrase", this.fieldInput.replace(rule, ""));
     }
   }
 };

@@ -1,40 +1,96 @@
 <template>
-  <div class="flex flex-col md:flex-row" id="app">
-    <div class="flex flex-col w-full md:w-3/4 xl:w-4/5">
-      <div class=" pb-4 md:pb-0 bg-gray-700">
-        <h1 class="fixed bottom-0 left-0 text-gray-100">Brain Early Access Build :^)</h1>
-        <searchBar @listUpdated="(newItem) => {items.push(newItem)}" />
-      </div>
-      <editor class="bg-gray-300 h-full" />
-        <!-- <div>
+  <div id="app" class="text-nord-4">
+    <div class="flex fexl-row">
+      <sidebar></sidebar>
+      <!-- Main screen content -->
+      <div class="h-screen w-full bg-nord-1">
+        <!-- Editor section -->
+        <tagList :tags="tags" />
+        <div class="h-full flex">
+          <editor
+            v-for="(note, index) in $store.getters.selectedNotes"
+            :key="index + note.id"
+            :index="index"
+            :immutableNote="note"
+          />
+        </div>
+
+        <!-- Details footer -->
+        <div class="bg-nord-0 px-2">
+          <div v-if="focusedNote" class="flex flex-row-reverse">
+            <span class="ml-4">Words: {{ focusedNote.content.split(" ").length }}</span>
+            <span>Characters: {{ focusedNote.content.length }}</span>
+          </div>
+          <!-- TODO: Find a place for the tags and implement them properly -->
+          <!-- <div>
           <div>{{ searchPhrase }}</div>
           <div v-for="tag in tags" :key="tag" >{{ tag }}</div>
-        </div> -->
+        </div>-->
+        </div>
+      </div>
+
+      <!-- Element for dragging notes and folders -->
+      <div
+        id="dragElement"
+        class="bg-nord-1 p-1 rounded border-2 border-nord-3"
+        style="position: absolute; white-space: nowrap;"
+        v-if="$store.getters.movingElement"
+      >
+        <p>{{ $store.getters.movingElement.name }}</p>
+      </div>
     </div>
-    <noteList class="md:order-first h-screen w-full md:w-1/4 xl:w-1/5 overflow-scroll overflow-y-auto overflow-x-hidden bg-gray-800 text-gray-100" />
   </div>
 </template>
 
 <script>
-import searchBar from './components/searchBar.vue'
-import noteList from './components/noteList.vue'
-import editor from './components/editor.vue'
-import { mapState } from 'vuex'
+import editor from "./components/editor";
+import { mapState } from "vuex";
+import sidebar from "./components/sidebar";
+import axios from "axios";
+import tagList from './components/tagList';
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    searchBar,
-    noteList,
-    editor
+    editor,
+    sidebar,
+    tagList
   },
-  data: function () {
+  data: function() {
     return {
       items: [],
-    }
+      selectedNote: null,
+      tags: ["#first", "#second", "#third"]
+    };
   },
   computed: {
-      ...mapState(['tags', 'searchPhrase'])
+    ...mapState(["tags", "searchPhrase", "focusedNote", "endpoint"])
+  },
+  created() {
+    // Get the notes data
+    axios.get(`${this.endpoint}/notes`).then(response => {
+      this.$store.state.notes = response.data;
+    });
+  },
+  mounted() {
+    document.addEventListener(
+      "drag",
+      function(ev) {
+        var element = document.getElementById("dragElement");
+        element.style.left = ev.clientX + 12 + "px";
+        element.style.top = ev.clientY + -20 + "px";
+      },
+      false
+    );
   }
-}
+};
 </script>
+
+<style>
+  input:focus,
+  select:focus,
+  textarea:focus,
+  button:focus {
+      outline: none;
+  }
+</style>
