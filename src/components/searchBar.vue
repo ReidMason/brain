@@ -20,10 +20,12 @@ export default {
   },
   methods: {
     addSearchCriteria: function() {
-      let rule = /(^|\s)(#[^\s]{1,})/g;
+      let rule = /(#[^\s || #]{1,})/g;
 
       if (this.fieldInput.match(rule)) {
         this.$store.commit("setTags", this.fieldInput.match(rule));
+      } else {
+        this.$store.commit("setTags", '');
       }
 
       this.$store.commit("setSearchPhrase", this.fieldInput.replace(rule, ""));
