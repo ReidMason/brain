@@ -1,0 +1,8 @@
+{
+  "runtimeOptions": {
+    "additionalProbingPaths": [
+      "C:\\Users\\maddo\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\maddo\\.nuget\\packages"
+    ]
+  }
+}

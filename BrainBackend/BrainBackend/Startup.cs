@@ -27,6 +27,14 @@ namespace BrainBackend
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Allow cross origin requests
+            services.AddCors(c =>
+            {
+                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin());
+                c.AddPolicy("AllowHeaders", options => options.AllowAnyHeader());
+                c.AddPolicy("AllowMethod", options => options.AllowAnyMethod());
+            });
+
             services.AddControllers();
         }
 
@@ -41,6 +49,14 @@ namespace BrainBackend
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            //  Allow cross origin requests
+            app.UseCors(options =>
+            {
+                options.AllowAnyOrigin();
+                options.AllowAnyHeader();
+                options.AllowAnyMethod();
+            });
 
             app.UseAuthorization();
 
