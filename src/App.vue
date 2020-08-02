@@ -5,7 +5,6 @@
       <!-- Main screen content -->
       <div class="h-screen w-full bg-nord-1">
         <!-- Editor section -->
-        <tagList :tags="tags" />
         <div class="h-full flex">
           <editor
             v-for="(note, index) in $store.getters.selectedNotes"
@@ -21,11 +20,6 @@
             <span class="ml-4">Words: {{ focusedNote.content.split(" ").length }}</span>
             <span>Characters: {{ focusedNote.content.length }}</span>
           </div>
-          <!-- TODO: Find a place for the tags and implement them properly -->
-          <!-- <div>
-          <div>{{ searchPhrase }}</div>
-          <div v-for="tag in tags" :key="tag" >{{ tag }}</div>
-        </div>-->
         </div>
       </div>
 
@@ -47,24 +41,21 @@ import editor from "./components/editor";
 import { mapState } from "vuex";
 import sidebar from "./components/sidebar";
 import axios from "axios";
-import tagList from './components/tagList';
 
 export default {
   name: "App",
   components: {
     editor,
-    sidebar,
-    tagList
+    sidebar
   },
   data: function() {
     return {
       items: [],
       selectedNote: null,
-      tags: ["#first", "#second", "#third"]
     };
   },
   computed: {
-    ...mapState(["tags", "searchPhrase", "focusedNote", "endpoint"])
+    ...mapState(["searchPhrase", "focusedNote", "endpoint"])
   },
   created() {
     // Get the notes data

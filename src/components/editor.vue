@@ -26,7 +26,6 @@
     <div class="content" style="background-color: #1e1e1e;">
       <div class="p-4" v-show="!editing" v-html="note.content"></div>
     </div>
-    <!-- <tagList :tags="note.tags" /> -->
   </div>
 </template>
 

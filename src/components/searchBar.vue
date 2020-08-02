@@ -1,35 +1,53 @@
 <template>
-  <form @submit.prevent="$emit('listUpdated', fieldInput)">
-    <input
-      class="pl-2 py-1 block focus:outline-none w-full bg-nord-1 rounded text-white"
-      type="text"
-      placeholder="Search"
-      @input="addSearchCriteria"
-      v-model="fieldInput"
-    />
-  </form>
+  <div>
+    <form @submit.prevent="$emit('listUpdated', fieldInput)">
+        <input
+          class="focus:outline-none w-full bg-nord-1 pl-2 py-1 block bg-nord-1 rounded text-white"
+          type="text"
+          placeholder="Search"
+          @keyup="checkTagCompleted"
+          @removeTag="console.log('testing')"
+          v-model="fieldInput"
+        />
+    </form> 
+    <Tag-list :tags="this.tags" />
+  </div>
 </template>
 
 <script>
+import TagList from "./tagList"
+
 export default {
   name: "searchBar",
+  components: {
+    TagList
+  },
   data: function() {
     return {
-      fieldInput: ""
+      fieldInput: "",
+      tags: []
     };
   },
   methods: {
     addSearchCriteria: function() {
-      let rule = /(#[^\s || #]{1,})/g;
+      const rule = /(#[^\s || #]{1,})/g;
 
-      if (this.fieldInput.match(rule)) {
-        this.$store.commit("setTags", this.fieldInput.match(rule));
-      } else {
-        this.$store.commit("setTags", '');
+      if (this.fieldInput.match(rule) !== null) {
+        let tag = this.fieldInput.match(rule)[0]
+        let id = this.tags.length - 1
+
+        this.tags.push({id: id, tag: tag.replace("#", "")})
       }
+      
+      this.fieldInput = this.fieldInput.replace(rule, "")
+    },
+    checkTagCompleted: function(e) {
+      const tagSubmitKeys = ["Enter", " ", "#"]
 
-      this.$store.commit("setSearchPhrase", this.fieldInput.replace(rule, ""));
+      if (tagSubmitKeys.includes(e.key)) {
+        this.addSearchCriteria();
+      }
     }
-  }
+  },
 };
 </script>

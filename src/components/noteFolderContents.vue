@@ -10,7 +10,7 @@
       <div class="flex" @click="selectNote(note)">
         <!-- Spacer div to keep the notes inline with the folders -->
         <div class="w-5"></div>
-        <noteItem :details="note" @delete="removeNote"></noteItem>
+        <note-item :deta-ils="note" @delete="removeNote"></note-item>
       </div>
     </div>
   </div>

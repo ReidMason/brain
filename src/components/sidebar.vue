@@ -33,7 +33,7 @@
         @listUpdated="(newItem) => { items.push(newItem); }"
       />
       <!-- Notes list -->
-      <noteList
+      <note-list
         class="bg-nord-0 text-nord-4 overflow-scroll overflow-y-auto overflow-x-hidden transition ease-in-out duration-700"
         v-if="displayedSection === 'notes'"
         @noteSelected="(node) => { console.log('test'); }"

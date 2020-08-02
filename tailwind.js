@@ -3,6 +3,8 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        // Add nord theme colour pallete
+        // https://www.nordtheme.com/docs/colors-and-palettes
         nord: {
           0: "#2e3440",
           1: "#3b4252",

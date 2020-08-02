@@ -15,11 +15,11 @@
         <chevron-down-icon v-else />
       </div>
       <!-- Folder name -->
-      <noteItem :class="{'bg-nord-9': hovered}" :details="folder" @delete="remove"></noteItem>
+      <note-item :class="{'bg-nord-9': hovered}" :details="folder" @delete="remove"></note-item>
     </div>
 
     <!-- Folder contents both notes and nested folders -->
-    <noteFolderContents :folder="folder" v-if="expanded"></noteFolderContents>
+    <note-folder-contents :folder="folder" v-if="expanded"></note-folder-contents>
   </div>
 </template>
 
