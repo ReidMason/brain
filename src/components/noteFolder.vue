@@ -25,8 +25,8 @@
 
 <script>
 import noteItem from "./noteItem";
-import chevronRightIcon from "./icons/chevronRightIcon";
-import chevronDownIcon from "./icons/chevronDownIcon";
+import chevronRightIcon from "../assets/icons/chevronRightIcon";
+import chevronDownIcon from "../assets/icons/chevronDownIcon";
 
 export default {
   name: "noteFolder",

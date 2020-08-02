@@ -50,8 +50,8 @@
 <script>
 import noteList from "./noteList";
 import searchBar from "./searchBar";
-import documentIcon from "./icons/documentIcon";
-import searchIcon from "./icons/searchIcon";
+import documentIcon from "../assets/icons/documentIcon";
+import searchIcon from "../assets/icons/searchIcon";
 
 export default {
   name: "sidebar",

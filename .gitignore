@@ -1,3 +1,9 @@
+# Backend project files
+BrainBackend/.vs
+BrainBackend/BrainBackend/bin/
+BrainBackend/BrainBackend/obj/
+BrainBackend/BrainBackend/.vscode/
+
 # Created by .ignore support plugin (hsz.mobi)
 ### Vue template
 # gitignore template for Vue.js projects
