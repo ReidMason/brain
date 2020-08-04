@@ -24,7 +24,8 @@ namespace BrainBackend.Controllers
         {
             try
             {
-                return Ok(FoldersService.CreateFolder(newFolder));
+                FoldersService.CreateFolder(newFolder);
+                return Ok(NotesService.GetRootFolder());
             }
             catch (NoteAlreadyExistsException)
             {
@@ -38,7 +39,7 @@ namespace BrainBackend.Controllers
             try
             {
                 FoldersService.UpdateFolder(id, newFolder);
-                return Ok(new Notes().Root);
+                return Ok(NotesService.GetRootFolder());
             }
             catch (NoteNotFound)
             {
@@ -50,7 +51,7 @@ namespace BrainBackend.Controllers
         public async Task<IActionResult> DeleteFolder(string id)
         {
             FoldersService.DeleteFolder(id);
-            return Ok(new Notes().Root);
+            return Ok(NotesService.GetRootFolder());
         }
     }
 }

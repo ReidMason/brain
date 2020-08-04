@@ -12,6 +12,8 @@ namespace BrainBackend.Models
 
         public Notes()
         {
+            Folder.AllNotes = new List<Note>();
+            Folder.AllFolders = new List<Folder>();
             Root = new Folder(Constants.NotesDirectory, null);
         }
 

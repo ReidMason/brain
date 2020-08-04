@@ -26,7 +26,8 @@ namespace BrainBackend.Controllers
         {
             try
             {
-                 return Ok(NotesService.CreateNote(newNote));
+                NotesService.CreateNote(newNote);
+                return Ok(NotesService.GetRootFolder());
             }
             catch (NoteAlreadyExistsException)
             {
@@ -39,7 +40,8 @@ namespace BrainBackend.Controllers
         {
             try
             {
-                return Ok(NotesService.UpdateNote(id, newNote));
+                NotesService.UpdateNote(id, newNote);
+                return Ok(NotesService.GetRootFolder());
             }
             catch (NoteNotFound)
             {
@@ -51,7 +53,7 @@ namespace BrainBackend.Controllers
         public async Task<IActionResult> DeleteNote(string id)
         {
             NotesService.DeleteNote(id);
-            return Ok();
+            return Ok(NotesService.GetRootFolder());
         }
     }
 }
