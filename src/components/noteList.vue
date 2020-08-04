@@ -12,13 +12,13 @@ import noteFolder from "./noteFolder.vue";
 
 export default {
   components: {
-    noteFolder
+    noteFolder,
   },
-  data: function() {
+  data: function () {
     return {};
   },
   computed: {
-    ...mapState(["test", "notes"])
-  }
+    ...mapState(["notes"]),
+  },
 };
 </script>
