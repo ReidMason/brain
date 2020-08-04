@@ -59,21 +59,21 @@ export default {
     noteList,
     searchBar,
     documentIcon,
-    searchIcon
+    searchIcon,
   },
-  data: function() {
+  data: function () {
     return {
-      displayedSection: "notes"
+      displayedSection: "notes",
     };
   },
   methods: {
-    setDisplayedSection: function(sectionName) {
+    setDisplayedSection: function (sectionName) {
       if (this.displayedSection === sectionName) {
         this.displayedSection = null;
       } else {
         this.displayedSection = sectionName;
       }
-    }
-  }
+    },
+  },
 };
 </script>

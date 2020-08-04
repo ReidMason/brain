@@ -6,7 +6,7 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
     state: {
-        endpoint: "http://10.128.0.108:5000/api",
+        endpoint: "https://localhost:44339/api/",
         tags: [],
         searchPhrase: "",
         selectedNotes: [],
@@ -18,7 +18,7 @@ const store = new Vuex.Store({
         save(state) {
             console.log(state.state.notes)
             axios.post(`${state.state.endpoint}/notes`, state.state.notes)
-        }
+        },
     },
     mutations: {
         setTags(state, tags) {

@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="text-nord-4">
     <div class="flex fexl-row">
-      <sidebar></sidebar>
+      <sidebar />
       <!-- Main screen content -->
       <div class="h-screen w-full bg-nord-1">
         <!-- Editor section -->
@@ -40,48 +40,49 @@
 import editor from "./components/editor";
 import { mapState } from "vuex";
 import sidebar from "./components/sidebar";
-import axios from "axios";
+import NotesAPI from "./mixins/NotesAPI";
 
 export default {
   name: "App",
   components: {
     editor,
-    sidebar
+    sidebar,
   },
-  data: function() {
+  mixins: [NotesAPI],
+  data: function () {
     return {
       items: [],
       selectedNote: null,
     };
   },
   computed: {
-    ...mapState(["searchPhrase", "focusedNote", "endpoint"])
+    ...mapState(["searchPhrase", "focusedNote", "endpoint"]),
   },
   created() {
-    // Get the notes data
-    axios.get(`${this.endpoint}/notes`).then(response => {
+    this.getNotes().then((response) => {
       this.$store.state.notes = response.data;
+      console.log(response.data);
     });
   },
   mounted() {
     document.addEventListener(
       "drag",
-      function(ev) {
+      function (ev) {
         var element = document.getElementById("dragElement");
         element.style.left = ev.clientX + 12 + "px";
         element.style.top = ev.clientY + -20 + "px";
       },
       false
     );
-  }
+  },
 };
 </script>
 
 <style>
-  input:focus,
-  select:focus,
-  textarea:focus,
-  button:focus {
-      outline: none;
-  }
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+  outline: none;
+}
 </style>
