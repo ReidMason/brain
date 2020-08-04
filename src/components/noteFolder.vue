@@ -27,30 +27,32 @@
 import noteItem from "./noteItem";
 import chevronRightIcon from "../assets/icons/chevronRightIcon";
 import chevronDownIcon from "../assets/icons/chevronDownIcon";
+import NotesAPI from "../mixins/NotesAPI";
 
 export default {
   name: "noteFolder",
   props: {
     folder: Object,
-    startExpanded: Boolean
+    startExpanded: Boolean,
   },
   components: {
     noteItem,
     chevronRightIcon,
-    chevronDownIcon
+    chevronDownIcon,
   },
-  data: function() {
+  mixins: [NotesAPI],
+  data: function () {
     return {
       expanded: this.startExpanded,
       hovered: false,
-      dragover: false
+      dragover: false,
     };
   },
-  beforeCreate: function() {
+  beforeCreate: function () {
     this.$options.components.noteFolderContents = require("./noteFolderContents").default;
   },
   methods: {
-    drop: function() {
+    drop: function () {
       // Triggered when the folder has an item dropped onto it
       // This item can either be a note or another folder
       // This function is long and should proabably be broken up at the very least
@@ -66,35 +68,43 @@ export default {
       // Element is being dropped onto itself
       var elementIsItself = this.folder === this.$store.getters.movingElement;
 
-      // If nether are true the element should be moved as this is a new location
+      // If none are true the element should be moved as this is a new location
       if (!(folderAlreadyInFolders || noteAlreadyInNotes || elementIsItself)) {
+        let target = this.$store.getters.movingElement;
+        target.parentId = this.folder.id;
         // Add it to folders if it's a folder and add it to notes if it's a note
         if (this.$store.getters.movingElement.folders != null) {
-          this.folder.folders.push(this.$store.getters.movingElement);
+          // Send update request
+          this.updateFolder(target.id, target).then((response) => {
+            this.$store.state.notes = response.data;
+            // Expand the folder to show it was moved
+            this.expanded = true;
+          });
         } else {
-          this.folder.notes.push(this.$store.getters.movingElement);
+          // Send update request
+          this.updateNote(target.id, target).then((response) => {
+            // Update our frontend model
+            this.$store.state.notes = response.data;
+            // Expand the folder to show it was moved
+            this.expanded = true;
+          });
         }
-        // Move was susccessful so set the movingElement to null so the element knows to emit the delete event
-        this.$store.commit("setMovingElement", true);
-        // Expand the folder to show it was moved
-        this.expanded = true;
-      } else {
-        // Move was unsuccessful
-        this.$store.commit("setMovingElement", false);
       }
 
+      // Move was unsuccessful
+      this.$store.commit("setMovingElement", null);
       // Regardless of anything being moved we need to act as if the drag has left the element to remove the highlight
       this.dragleave();
     },
-    dragenter: function() {
+    dragenter: function () {
       this.hovered = true;
     },
-    dragleave: function() {
+    dragleave: function () {
       this.hovered = false;
     },
-    remove: function(folder) {
+    remove: function (folder) {
       this.$emit("delete", folder);
-    }
-  }
+    },
+  },
 };
 </script>

@@ -12,11 +12,10 @@ const store = new Vuex.Store({
         selectedNotes: [],
         focusedNote: null,
         movingElement: null,
-        notes: {}
+        notes: {},
     },
     actions: {
         save(state) {
-            console.log(state.state.notes)
             axios.post(`${state.state.endpoint}/notes`, state.state.notes)
         },
     },
@@ -36,7 +35,7 @@ const store = new Vuex.Store({
         },
         setMovingElement(state, note) {
             state.movingElement = note;
-        }
+        },
     },
     getters: {
         notes: (state) => {

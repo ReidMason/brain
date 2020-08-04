@@ -10,7 +10,7 @@
       <div class="flex" @click="selectNote(note)">
         <!-- Spacer div to keep the notes inline with the folders -->
         <div class="w-5"></div>
-        <note-item :details="note" @delete="removeNote"></note-item>
+        <note-item :details="note"></note-item>
       </div>
     </div>
   </div>
@@ -32,12 +32,6 @@ export default {
   methods: {
     selectNote: function (note) {
       this.$store.commit("addToSelectedNotes", note);
-    },
-    removeNote: function (note) {
-      // Filters out the note that fired the delete event
-      this.folder.notes = this.folder.notes.filter((n) => {
-        return n.id != note.id;
-      });
     },
     removeFolder: function (folder) {
       // Filters out the folder that fired the delete event

@@ -61,7 +61,6 @@ export default {
   created() {
     this.getNotes().then((response) => {
       this.$store.state.notes = response.data;
-      console.log(response.data);
     });
   },
   mounted() {
