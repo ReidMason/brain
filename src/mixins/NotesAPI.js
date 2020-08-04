@@ -15,7 +15,6 @@ const NotesAPI = {
         },
         updateNote(noteId, noteObject) {
             return axios.put(UrlJoin(this.$store.state.endpoint, `/Notes/${noteId}`), noteObject)
-
         }
     }
 }

@@ -12,7 +12,7 @@
       />
       <button
         class="mr-2 border-2 border-gray-600 bg-white focus:outline-none w-16"
-        @click="$store.dispatch('save')"
+        @click="updateNote(note.id, note)"
       >Save</button>
       <button
         class="mr-2 border-2 border-gray-600 bg-white focus:outline-none w-16"
@@ -24,34 +24,35 @@
       >X</button>
     </div>
     <div class="content" style="background-color: #1e1e1e;">
+      <div class="h-full" v-show="editing">
+        <textarea class="p-4 bg-nord-2 w-full h-full" v-model="note.content"></textarea>
+      </div>
       <div class="p-4" v-show="!editing" v-html="note.content"></div>
     </div>
   </div>
 </template>
 
 <script>
-// import tagList from './tagList';
+import NotesAPI from "../mixins/NotesAPI";
 
 export default {
-  // components: {
-  //   tagList
-  // },
   props: {
     immutableNote: Object,
-    index: Number
+    index: Number,
   },
-  data: function() {
+  mixins: [NotesAPI],
+  data: function () {
     return {
       editing: true,
       options: {},
-      note: this.immutableNote
+      note: this.immutableNote,
     };
   },
   computed: {
-    width: function() {
+    width: function () {
       return 100 / this.$store.state.selectedNotes.length;
-    }
-  }
+    },
+  },
 };
 </script>
 
