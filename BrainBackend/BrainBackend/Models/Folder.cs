@@ -19,8 +19,9 @@ namespace BrainBackend.Models
         {
             get
             {
-                var file = new FileInfo(Filepath);
-                return file.CreationTime.Ticks.ToString();
+                //var file = new FileInfo(Filepath);
+                //return file.CreationTime.Ticks.ToString();
+                return Filepath.GetHashCode().ToString().TrimStart('-');
             }
         }
         public string Filepath
