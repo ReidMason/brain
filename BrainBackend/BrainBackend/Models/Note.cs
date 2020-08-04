@@ -55,6 +55,9 @@ namespace BrainBackend.Models
             Folderpath = Path.GetDirectoryName(filepath);
             Name = file.Name.Replace(file.Extension, "");
             ParentId = parentId;
+
+            // Loading note content for now
+            Content = GetContent();
         }
 
         public void Save()
