@@ -10,7 +10,7 @@
       <div class="flex" @click="selectNote(note)">
         <!-- Spacer div to keep the notes inline with the folders -->
         <div class="w-5"></div>
-        <note-item :deta-ils="note" @delete="removeNote"></note-item>
+        <note-item :details="note" @delete="removeNote"></note-item>
       </div>
     </div>
   </div>
@@ -24,27 +24,27 @@ export default {
   name: "noteFolderContents",
   components: {
     noteFolder,
-    noteItem
+    noteItem,
   },
   props: {
-    folder: Object
+    folder: Object,
   },
   methods: {
-    selectNote: function(note) {
+    selectNote: function (note) {
       this.$store.commit("addToSelectedNotes", note);
     },
-    removeNote: function(note) {
+    removeNote: function (note) {
       // Filters out the note that fired the delete event
-      this.folder.notes = this.folder.notes.filter(n => {
+      this.folder.notes = this.folder.notes.filter((n) => {
         return n.id != note.id;
       });
     },
-    removeFolder: function(folder) {
+    removeFolder: function (folder) {
       // Filters out the folder that fired the delete event
-      this.folder.folders = this.folder.folders.filter(n => {
+      this.folder.folders = this.folder.folders.filter((n) => {
         return n.id != folder.id;
       });
-    }
-  }
+    },
+  },
 };
 </script>
