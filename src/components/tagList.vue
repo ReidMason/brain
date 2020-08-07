@@ -5,27 +5,25 @@
       :key="tag.id"
       class="h-6 ml-1 mb-1 flex bg-gray-500 rounded-full cursor-pointer overflow-hidden"
     >
-    <!-- Cross icon still not displaying, svg has no height or width -->
-      <div @click="removeTag()" class="pl-3 pr-2 text-md"><cross-icon /></div>
+      <!-- Cross icon still not displaying, svg has no height or width -->
+      <div @click="removeTag()" class="pl-3 pr-2 text-md">
+        <cross-icon />
+      </div>
       <div class="pr-3 leading-snug truncate">{{tag.tag}}</div>
     </div>
   </div>
 </template>
 
 <script>
-import crossIcon from "../assets/icons/crossIcon"
+import crossIcon from "../assets/icons/crossIcon";
 
 export default {
   props: {
     tags: Array,
   },
   components: {
-    crossIcon
+    crossIcon,
   },
-  methods: {
-    removeTag: function () {
-      console.log("remove");
-    },
-  },
+  methods: {},
 };
 </script>

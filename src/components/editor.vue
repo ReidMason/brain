@@ -39,7 +39,7 @@
     <!-- Cursor dropdown -->
     <div v-if="dropdownVisible">
       <div class="absolute" :style="{left: `${caret.left + 320}px`, top: `${caret.top + 70}px`}">
-        <suggestion-list ref="suggestionList" />
+        <suggestion-list ref="suggestionList" @select-tag="inputSuggestion" />
       </div>
     </div>
   </div>
@@ -71,7 +71,9 @@ export default {
   },
   methods: {
     checkKeypress: function (e) {
-      console.log(e.code);
+      let ele = this.$refs.editWindow;
+      let position = ele.selectionEnd;
+
       if (e.code === "Space" && e.ctrlKey) {
         this.checkSuggestions();
       } else if (e.code === "ArrowLeft" || e.code === "ArrowRight") {
@@ -89,6 +91,8 @@ export default {
         this.inputSuggestion(selection);
         this.dropdownVisible = false;
       }
+
+      ele.setSelectionRange(position, position);
     },
     inputSuggestion: function (selection) {
       let ele = this.$refs.editWindow;
@@ -124,6 +128,8 @@ export default {
         lastLetter,
         selection + " "
       );
+
+      this.dropdownVisible = false;
     },
     checkSuggestions: function () {
       let ele = this.$refs.editWindow;

@@ -2,14 +2,17 @@
   <ul>
     <li v-for="(suggestion, i) in suggestions" :key="i">
       <div
-        class="cursor-pointer bg-nord-0 p-1 pl-2"
+        class="cursor-pointer bg-nord-0 p-1 pl-2 hover:bg-nord-10"
         :class="{'bg-nord-10' : i === activeIndex}"
+        @click="$emit('select-tag', suggestions[i])"
       >{{suggestion}}</div>
     </li>
   </ul>
 </template>
 
 <script>
+import utils from "../mixins/Utils";
+
 export default {
   name: "SuggestionList",
   data: function () {
@@ -17,6 +20,7 @@ export default {
       activeIndex: 0,
     };
   },
+  mixins: [utils],
   methods: {
     moveDown: function () {
       if (this.activeIndex < this.suggestions.length - 1) {
@@ -31,7 +35,7 @@ export default {
   },
   computed: {
     suggestions: function () {
-      return ["Sug1", "Sug2", "Sug3", "Sug4", "Sug5"];
+      return this.getAllTags();
     },
   },
 };

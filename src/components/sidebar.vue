@@ -28,15 +28,11 @@
     <div class="bg-nord-0 w-64 border-r border-gray-900 border-opacity-50" v-if="displayedSection">
       <!-- File search -->
 
-      <search-bar
-        class="p-1 mb-3 border-b-2 border-gray-900 border-opacity-75"
-        @listUpdated="(newItem) => { items.push(newItem); }"
-      />
+      <search-bar class="p-1 mb-3 border-b-2 border-gray-900 border-opacity-75" />
       <!-- Notes list -->
       <note-list
         class="bg-nord-0 text-nord-4 overflow-scroll overflow-y-auto overflow-x-hidden transition ease-in-out duration-700"
         v-if="displayedSection === 'notes'"
-        @noteSelected="(node) => { console.log('test'); }"
       />
 
       <!-- Search results -->
