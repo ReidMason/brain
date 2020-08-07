@@ -6,7 +6,8 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
     state: {
-        endpoint: "https://localhost:44339/api/",
+        // endpoint: "https://localhost:44339/api/",
+        endpoint: "https://localhost:5001/api/",
         tags: [],
         searchPhrase: "",
         selectedNotes: [],
