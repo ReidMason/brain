@@ -6,7 +6,7 @@
           type="text"
           placeholder="Search"
           @keydown="checkTagCompleted"
-          @removeTag="console.log('testing')"
+          @input="filterTagsFromSearch"
           v-model="fieldInput"
         />
     </form>
@@ -25,12 +25,13 @@ export default {
   data: function() {
     return {
       fieldInput: "",
+      search: "",
       tags: []
     };
   },
   methods: {
     addSearchCriteria: function() {
-      const rule = /(#[^\s || #]{1,})/g;
+      const rule = /(#([^\s || #]{1,})?)/g;
 
       if (this.fieldInput.match(rule) !== null) {
         let tag = this.fieldInput.match(rule)[0]
@@ -43,11 +44,17 @@ export default {
     checkTagCompleted: function(e) {
       const tagSubmitKeys = ["Enter", " ", "#"]
       
+      
 
       if (this.fieldInput.includes("#") && tagSubmitKeys.includes(e.key)) {
         e.preventDefault();
         this.addSearchCriteria();
       }
+    },
+    filterTagsFromSearch: function() {
+      const rule = /(#([^\s || #]{1,})?)/g;
+
+      this.search = this.fieldInput.replace(rule, "")
     }
   },
 };

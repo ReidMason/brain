@@ -7,8 +7,6 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
     state: {
         endpoint: "http://10.128.0.108:5000/api",
-        tags: [],
-        searchPhrase: "",
         selectedNotes: [],
         focusedNote: null,
         movingElement: null,
@@ -21,12 +19,6 @@ const store = new Vuex.Store({
         }
     },
     mutations: {
-        setTags(state, tags) {
-            state.tags = tags;
-        },
-        setSearchPhrase(state, phrase) {
-            state.searchPhrase = phrase;
-        },
         addToSelectedNotes(state, note) {
             state.selectedNotes.push(note)
             state.focusedNote = note
