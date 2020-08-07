@@ -1,16 +1,16 @@
 <template>
   <div>
-    <form @submit.prevent="$emit('listUpdated', fieldInput)">
+    <form>
         <input
           class="focus:outline-none w-full bg-nord-1 pl-2 py-1 block bg-nord-1 rounded text-white"
           type="text"
           placeholder="Search"
-          @keyup="checkTagCompleted"
+          @keydown="checkTagCompleted"
           @removeTag="console.log('testing')"
           v-model="fieldInput"
         />
-    </form> 
-    <Tag-list :tags="this.tags" />
+    </form>
+    <Tag-list :tags="tags" @remove-tag="(i) => tags.splice(i, 1)" />
   </div>
 </template>
 
@@ -34,17 +34,18 @@ export default {
 
       if (this.fieldInput.match(rule) !== null) {
         let tag = this.fieldInput.match(rule)[0]
-        let id = this.tags.length - 1
 
-        this.tags.push({id: id, tag: tag.replace("#", "")})
+        this.tags.push(tag.replace("#", ""))
       }
       
       this.fieldInput = this.fieldInput.replace(rule, "")
     },
     checkTagCompleted: function(e) {
       const tagSubmitKeys = ["Enter", " ", "#"]
+      
 
-      if (tagSubmitKeys.includes(e.key)) {
+      if (this.fieldInput.includes("#") && tagSubmitKeys.includes(e.key)) {
+        e.preventDefault();
         this.addSearchCriteria();
       }
     }

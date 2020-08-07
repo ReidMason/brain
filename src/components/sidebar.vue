@@ -29,8 +29,7 @@
       <!-- File search -->
 
       <search-bar
-        class="p-1 mb-3 border-b-2 border-gray-900 border-opacity-75"
-        @listUpdated="(newItem) => { items.push(newItem); }"
+        class="p-1 pt-2 mb-3 border-b-2 border-gray-900 border-opacity-75"
       />
       <!-- Notes list -->
       <note-list
