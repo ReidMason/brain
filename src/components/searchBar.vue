@@ -54,6 +54,8 @@ export default {
     filterTagsFromSearch: function() {
       const rule = /(#([^\s || #]{1,})?)/g;
 
+      this.$emit('toggle-pane')
+
       this.search = this.fieldInput.replace(rule, "")
     }
   },

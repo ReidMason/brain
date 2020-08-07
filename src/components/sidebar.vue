@@ -30,6 +30,7 @@
 
       <search-bar
         class="p-1 pt-2 mb-3 border-b-2 border-gray-900 border-opacity-75"
+        @toggle-pane="displayedSection = 'search'"
       />
       <!-- Notes list -->
       <note-list
