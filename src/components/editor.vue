@@ -25,21 +25,21 @@
     </div>
     <div class="content" style="background-color: #1e1e1e;">
       <div class="h-full" v-show="editing">
-        <textarea
-          ref="editWindow"
+        <codemirror
           class="p-4 bg-nord-2 w-full h-full"
+          ref="codemirror"
           v-model="note.content"
-          @input="checkSuggestions"
-          @keyup="checkKeypress"
-        ></textarea>
+          :options="cmOptions"
+          @input="checkForHints"
+        />
       </div>
       <div class="p-4" v-show="!editing" v-html="note.content"></div>
     </div>
 
     <!-- Cursor dropdown -->
-    <div v-if="dropdownVisible">
-      <div class="absolute" :style="{left: `${caret.left + 320}px`, top: `${caret.top + 70}px`}">
-        <suggestion-list ref="suggestionList" @select-tag="inputSuggestion" />
+    <div v-if="suggestionListVisible">
+      <div class="absolute" :style="{left: `${caret.left}px`, top: `${caret.top}px`}">
+        <suggestion-list ref="suggestionList" />
       </div>
     </div>
   </div>
@@ -47,7 +47,14 @@
 
 <script>
 import NotesAPI from "../mixins/NotesAPI";
-import getCaretCoordinates from "../../textarea-caret-position";
+import { codemirror } from "vue-codemirror";
+
+import Utils from "../mixins/Utils";
+import "codemirror/lib/codemirror.css";
+
+import "codemirror/addon/search/searchcursor";
+import "codemirror/addon/search/search";
+
 import SuggestionList from "./SuggestionList";
 
 export default {
@@ -56,112 +63,105 @@ export default {
     index: Number,
   },
   components: {
+    codemirror,
     SuggestionList,
   },
-  mixins: [NotesAPI],
+  mixins: [NotesAPI, Utils],
   data: function () {
     return {
       editing: true,
-      options: {},
       note: this.immutableNote,
+      suggestionListVisible: false,
+      caret: {},
 
-      caret: null,
-      dropdownVisible: false,
+      cmOptions: {
+        mode: "text/x-markdown",
+        lineNumbers: true,
+        line: true,
+        lineWiseCopyCut: true,
+        extraKeys: {
+          "Ctrl-Space": this.checkForHints,
+          Down: this.parseDownArrow,
+          Up: this.parseUpArrow,
+          Enter: this.parseEnter,
+        },
+        events: ["beforeSelectionChange"],
+      },
+      cm: null,
     };
   },
   methods: {
-    checkKeypress: function (e) {
-      let ele = this.$refs.editWindow;
-      let position = ele.selectionEnd;
+    getEditedWord(cm) {
+      const cursor = cm.getCursor();
+      const line = cm.getTokenAt(cursor, true).string;
 
-      if (e.code === "Space" && e.ctrlKey) {
-        this.checkSuggestions();
-      } else if (e.code === "ArrowLeft" || e.code === "ArrowRight") {
-        this.dropdownVisible = false;
-      } else if (e.code === "ArrowDown" && this.dropdownVisible) {
-        e.preventDefault();
+      // Get the word being typed
+      let start = 0;
+      let end = 0;
+      let word = "";
+
+      let nextLetter = "";
+      // Basically just go backwards from the cursor until you hit a space then you know the word ended
+      for (let i = cursor.ch - 1; i >= 0; i--) {
+        nextLetter = line.charAt(i);
+        if (nextLetter == " ") {
+          break;
+        }
+        word = nextLetter + word;
+        start = i;
+      }
+
+      // Now go forwards to add the end of the word
+      for (let i = cursor.ch; i <= line.length; i++) {
+        nextLetter = line.charAt(i);
+        if (nextLetter == " ") {
+          break;
+        }
+        word += nextLetter;
+        end = i;
+      }
+
+      return { start, end, word };
+    },
+    checkForHints() {
+      let cm = this.$refs.codemirror.codemirror;
+      let word = this.getEditedWord(cm);
+
+      this.suggestionListVisible = word.word.startsWith("#");
+      if (this.suggestionListVisible) {
+        this.caret = cm.cursorCoords(true);
+      }
+    },
+    parseDownArrow() {
+      if (this.suggestionListVisible) {
         this.$refs.suggestionList.moveDown();
-      } else if (e.code === "ArrowUp" && this.dropdownVisible) {
-        e.preventDefault();
-        this.$refs.suggestionList.moveUp();
-      } else if (e.code === "Enter" && this.dropdownVisible) {
-        let selection = this.$refs.suggestionList.suggestions[
-          this.$refs.suggestionList.activeIndex
-        ];
-        this.inputSuggestion(selection);
-        this.dropdownVisible = false;
-      }
-
-      ele.setSelectionRange(position, position);
-    },
-    inputSuggestion: function (selection) {
-      let ele = this.$refs.editWindow;
-      let firstLetter = 0;
-      let lastLetter = 0;
-
-      // Get the word being typed
-      let nextLetter = "";
-      // Basically just go backwards from the cursor until you hit a space then you know the word ended
-      for (let i = ele.selectionEnd - 1; i >= 0; i--) {
-        nextLetter = this.note.content.charAt(i);
-        if (nextLetter == " ") {
-          break;
-        }
-        firstLetter = i;
-      }
-
-      // Now go forwards to add the end of the word
-      for (let i = ele.selectionEnd; i <= this.note.content.length; i++) {
-        nextLetter = this.note.content.charAt(i);
-        if (nextLetter == " ") {
-          break;
-        }
-        lastLetter = i + 2;
-      }
-
-      String.prototype.replaceBetween = function (start, end, what) {
-        return this.substring(0, start) + what + this.substring(end);
-      };
-
-      this.note.content = this.note.content.replaceBetween(
-        firstLetter,
-        lastLetter,
-        selection + " "
-      );
-
-      this.dropdownVisible = false;
-    },
-    checkSuggestions: function () {
-      let ele = this.$refs.editWindow;
-
-      // Get the word being typed
-      let editingWord = "";
-      let nextLetter = "";
-      // Basically just go backwards from the cursor until you hit a space then you know the word ended
-      for (let i = ele.selectionEnd - 1; i >= 0; i--) {
-        nextLetter = this.note.content.charAt(i);
-        if (nextLetter == " ") {
-          break;
-        }
-        editingWord = nextLetter + editingWord;
-      }
-
-      // Now go forwards to add the end of the word
-      for (let i = ele.selectionEnd; i <= this.note.content.length; i++) {
-        nextLetter = this.note.content.charAt(i);
-        if (nextLetter == " ") {
-          break;
-        }
-        editingWord += nextLetter;
-      }
-
-      // Find the cursor location
-      if (editingWord.length > 0 && editingWord[0].startsWith("#")) {
-        var caret = getCaretCoordinates(ele, ele.selectionEnd);
-        this.caret = caret;
-        this.dropdownVisible = true;
       } else {
-        this.dropdownVisible = false;
+        return "CodeMirror.Pass";
+      }
+    },
+    parseUpArrow() {
+      if (this.suggestionListVisible) {
+        this.$refs.suggestionList.moveUp();
+      } else {
+        return "CodeMirror.Pass";
+      }
+    },
+    parseEnter(cm) {
+      if (this.suggestionListVisible) {
+        let replacement =
+          this.$refs.suggestionList.suggestions[
+            this.$refs.suggestionList.activeIndex
+          ] + " ";
+        let word = this.getEditedWord(cm);
+        let cursor = cm.getCursor();
+        cm.replaceRange(
+          replacement,
+          { line: cursor.line, ch: word.start },
+          { line: cursor.line, ch: word.end }
+        );
+        this.suggestionListVisible = false;
+      } else {
+        return "CodeMirror.Pass";
       }
     },
   },
@@ -176,5 +176,30 @@ export default {
 <style scoped>
 .content {
   height: 96.5%;
+}
+</style>
+
+<style>
+.CodeMirror {
+  @apply bg-nord-2;
+  @apply text-nord-4;
+  @apply h-full;
+  @apply w-full;
+  font: 400 15px Arial;
+}
+
+.CodeMirror-lines {
+  @apply mt-2;
+  @apply ml-2;
+}
+
+.CodeMirror-linenumber.CodeMirror-gutter-elt {
+  @apply pl-0;
+  @apply mr-2;
+}
+
+.CodeMirror-gutters {
+  @apply bg-nord-1;
+  @apply border-none;
 }
 </style>
