@@ -24,22 +24,28 @@
       >X</button>
     </div>
     <div class="content" style="background-color: #1e1e1e;">
-      <div class="h-full" v-show="editing">
+      <div class="h-full" v-show="editing" @click="handleEditorContainerClick">
         <codemirror
           class="p-4 bg-nord-2 w-full h-full"
           ref="codemirror"
           v-model="note.content"
           :options="cmOptions"
           @input="checkForHints"
+          @inputRead="handleInput"
+          @keyHandled="handleKeys"
         />
       </div>
       <div class="p-4" v-show="!editing" v-html="note.content"></div>
     </div>
 
     <!-- Cursor dropdown -->
-    <div v-if="suggestionListVisible">
-      <div class="absolute" :style="{left: `${caret.left}px`, top: `${caret.top}px`}">
-        <suggestion-list ref="suggestionList" />
+    <div v-show="suggestionListVisible">
+      <div class="absolute z-10" :style="{left: `${caret.left}px`, top: `${caret.top + 20}px`}">
+        <suggestion-list
+          ref="suggestionList"
+          :suggestions="tagSuggestions"
+          @select-tag="replaceWord"
+        />
       </div>
     </div>
   </div>
@@ -49,7 +55,6 @@
 import NotesAPI from "../mixins/NotesAPI";
 import { codemirror } from "vue-codemirror";
 
-import Utils from "../mixins/Utils";
 import "codemirror/lib/codemirror.css";
 
 import "codemirror/addon/search/searchcursor";
@@ -66,13 +71,14 @@ export default {
     codemirror,
     SuggestionList,
   },
-  mixins: [NotesAPI, Utils],
+  mixins: [NotesAPI],
   data: function () {
     return {
       editing: true,
       note: this.immutableNote,
       suggestionListVisible: false,
       caret: {},
+      editedWord: null,
 
       cmOptions: {
         mode: "text/x-markdown",
@@ -85,13 +91,33 @@ export default {
           Up: this.parseUpArrow,
           Enter: this.parseEnter,
         },
-        events: ["beforeSelectionChange"],
+        events: ["beforeSelectionChange", "inputRead", "keyHandled"],
       },
       cm: null,
     };
   },
   methods: {
+    handleInput(_, e) {
+      // If input includes a space recalculate the tags
+      if (e.text[0].includes(" ")) {
+        let tags = this.note.content.match(/(#[^\s || #]{1,})/g);
+        tags.forEach((tag) => {
+          if (!this.$store.state.notes.allTags.includes(tag)) {
+            this.$store.state.notes.allTags.push(tag);
+          }
+        });
+      }
+    },
+    handleKeys(_, key) {
+      if (key === "Esc") {
+        this.suggestionListVisible = false;
+      }
+    },
+    handleEditorContainerClick() {
+      this.suggestionListVisible = false;
+    },
     getEditedWord(cm) {
+      console.log("Getting edited word");
       const cursor = cm.getCursor();
       const line = cm.getTokenAt(cursor, true).string;
 
@@ -111,6 +137,7 @@ export default {
         start = i;
       }
 
+      end = cursor.ch;
       // Now go forwards to add the end of the word
       for (let i = cursor.ch; i <= line.length; i++) {
         nextLetter = line.charAt(i);
@@ -118,7 +145,7 @@ export default {
           break;
         }
         word += nextLetter;
-        end = i;
+        end = i + 1;
       }
 
       return { start, end, word };
@@ -126,6 +153,7 @@ export default {
     checkForHints() {
       let cm = this.$refs.codemirror.codemirror;
       let word = this.getEditedWord(cm);
+      this.editedWord = word.word;
 
       this.suggestionListVisible = word.word.startsWith("#");
       if (this.suggestionListVisible) {
@@ -148,26 +176,46 @@ export default {
     },
     parseEnter(cm) {
       if (this.suggestionListVisible) {
-        let replacement =
-          this.$refs.suggestionList.suggestions[
-            this.$refs.suggestionList.activeIndex
-          ] + " ";
-        let word = this.getEditedWord(cm);
-        let cursor = cm.getCursor();
-        cm.replaceRange(
-          replacement,
-          { line: cursor.line, ch: word.start },
-          { line: cursor.line, ch: word.end }
-        );
-        this.suggestionListVisible = false;
+        let replacement = this.$refs.suggestionList.suggestions[
+          this.$refs.suggestionList.activeIndex
+        ];
+        this.replaceWord(replacement, cm);
       } else {
         return "CodeMirror.Pass";
       }
+    },
+    replaceWord(replacement, cm = null) {
+      replacement += " ";
+      cm = cm || this.$refs.codemirror.codemirror;
+      let word = this.getEditedWord(cm);
+      let cursor = cm.getCursor();
+
+      // // Add a space to the replacement if there isn't already a space following it
+      // const line = cm.getTokenAt(cursor, true).string;
+      // let nextLetter = line.charAt(word.end);
+      // if (nextLetter != " ") {
+      //   replacement += " ";
+      // }
+
+      // Do the replacement
+      cm.replaceRange(
+        replacement,
+        { line: cursor.line, ch: word.start },
+        { line: cursor.line, ch: word.end }
+      );
+      cm.focus();
+      cm.setCursor({ line: cursor.line, ch: word.start + replacement.length });
+      this.suggestionListVisible = false;
     },
   },
   computed: {
     width: function () {
       return 100 / this.$store.state.selectedNotes.length;
+    },
+    tagSuggestions() {
+      return this.$store.state.notes.allTags.filter((x) =>
+        x.startsWith(this.editedWord)
+      );
     },
   },
 };
