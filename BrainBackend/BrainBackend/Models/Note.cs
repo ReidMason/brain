@@ -1,16 +1,20 @@
 ﻿using BrainBackend.Services;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace BrainBackend.Models
 {
     public class Note : BrainFile
     {
+        public static List<String> AllTags { get; set; }
         public string Folderpath { get; set; }
         public string Content { get; set; }
-        public string Filename { get
+        public List<String> Tags { get; set; }
+    public string Filename { get
             {
                 return $"{Name}.md";
             } 
@@ -46,6 +50,7 @@ namespace BrainBackend.Models
             Folderpath = folderpath;
             ParentId = parentId;
             Save();
+            FindTags();
         }
 
         // Loading note where file already exists
@@ -58,6 +63,30 @@ namespace BrainBackend.Models
 
             // Loading note content for now
             Content = GetContent();
+            FindTags();
+        }
+
+        private void FindTags()
+        {
+            Tags = new List<string>();
+
+            // Find all tags in the note
+            Regex regex = new Regex(@"#[^\s || #]{1,}");
+            MatchCollection matches = regex.Matches(Content);
+            foreach (Match match in matches)
+            {
+                // Add to tag list for the specific note
+                if (!Tags.Contains(match.Value))
+                {
+                    Tags.Add(match.Value);
+                }
+
+                // Add to global tags list
+                if (!AllTags.Contains(match.Value))
+                {
+                    AllTags.Add(match.Value);
+                }
+            }
         }
 
         public void Save()

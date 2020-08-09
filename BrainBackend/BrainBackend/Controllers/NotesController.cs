@@ -12,6 +12,7 @@ namespace BrainBackend.Controllers
         [HttpGet]
         public async Task<IActionResult> GetNotes()
         {
+            
             return Ok(NotesService.GetRootFolder());
         }
 

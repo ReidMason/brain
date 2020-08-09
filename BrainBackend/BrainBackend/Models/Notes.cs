@@ -8,13 +8,14 @@ namespace BrainBackend.Models
 {
     public class Notes
     {
-        public Folder Root { get; }
+        public RootFolder Root { get; set; }
 
         public Notes()
         {
             Folder.AllNotes = new List<Note>();
             Folder.AllFolders = new List<Folder>();
-            Root = new Folder(Constants.NotesDirectory, null);
+            Note.AllTags = new List<String>();
+            Root = new RootFolder(Constants.NotesDirectory, null);
         }
 
         public List<Note> AllNotes
@@ -25,4 +26,5 @@ namespace BrainBackend.Models
             }
         }
     }
+
 }
